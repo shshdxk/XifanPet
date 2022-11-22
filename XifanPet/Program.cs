@@ -34,7 +34,7 @@ namespace XifanPet
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new FishForm());
+                Application.Run(new MainForm());
             }
             else
             {
@@ -91,7 +91,7 @@ namespace XifanPet
                     //CmdStartCTIProc(Application.ExecutablePath, "cmd params");
                     return;
                 }
-                System.Threading.Thread.Sleep(2 * 1000);
+                System.Threading.Thread.Sleep(2_000);
             };
         }
 
@@ -120,7 +120,7 @@ namespace XifanPet
             p.StandardInput.WriteLine("exit");
             p.Close();
 
-            System.Threading.Thread.Sleep(2000);//必须等待，否则重启的程序还未启动完成；根据情况调整等待时间
+            System.Threading.Thread.Sleep(2_000);//必须等待，否则重启的程序还未启动完成；根据情况调整等待时间
         }
     }
 }

@@ -6,6 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Drawing;
+using Iplugin;
 
 namespace XifanPet
 {
@@ -18,7 +19,7 @@ namespace XifanPet
         ///<summary>
         /// 存放插件的集合
         ///</summary>
-        private static Dictionary<String, Object> plugins = new Dictionary<String, Object>();
+        private static Dictionary<String, IPetPlug> plugins = new Dictionary<String, IPetPlug>();
         ///<summary>
         /// 载入所有插件
         ///</summary>
@@ -52,7 +53,7 @@ namespace XifanPet
                                 if (!plugins.ContainsKey(t.FullName))
                                 {
                                     Object selObj = ab.CreateInstance(t.FullName);
-                                    plugins.Add(t.FullName, selObj);
+                                    plugins.Add(t.FullName, (IPetPlug) selObj);
                                     t.GetMethod("Initialization").Invoke(selObj, null);
                                     MethodInfo GetMenu = t.GetMethod("GetMenu");
                                     Object menuO = GetMenu.Invoke(selObj, null);

@@ -10,40 +10,35 @@ using WinSystem;
 using System.IO;
 using System.Reflection;
 using Rep;
+using Iplugin.Pet;
 
 namespace XifanPet
 {
-    public partial class FishForm : Form
+    public partial class MainForm : Form
     {
+        IPet pet = null;
+        ActionResource actionResource = null;
         Point oldPoint = new Point(0, 0);
         bool mouseDown = false;
         bool haveHandle = false;
         Timer timerSpeed = new Timer();
+        // 最大移动距离
         int MaxCount = 50;
-        float stepX = 2f;
-        float stepY = 0f;
+        // 当前移动距离
         int count = 0;
-        bool speedMode = false;
+        // x轴速度
+        float stepX = 2f;
+        // y轴速度
+        float stepY = 0f;
         float left = 0f, top = 0f;
 
         Random r = new Random();
 
         bool toRight = true;        //是否向右
-        int frameCount = 20;        //总帧数
-        int frame = 0;              //当前帧
-        int frameWidth = 100;       //每帧宽度
-        int frameHeight = 100;      //每帧高度
 
-        public FishForm()
+        public MainForm()
         {
             InitializeComponent();
-            Resource.init();
-            toRight = true;
-            frame = 20;
-            frame = 0;
-            frameWidth = FullImage.Width / 20;
-            frameHeight = FullImage.Height;
-            left = -frameWidth;
             top = Screen.PrimaryScreen.WorkingArea.Height / 2f;
 
             timerSpeed.Interval = 20;
@@ -89,7 +84,7 @@ namespace XifanPet
             count = 0;
             MaxCount = r.Next(70) + 40;
             timerSpeed.Interval = r.Next(20) + 2;
-            speedMode = true;
+            //speedMode = true;
             mouseDown = false;
         }
 
@@ -103,13 +98,16 @@ namespace XifanPet
         int countN = 0;
         void timerSpeed_Tick(object sender, EventArgs e)
         {
+            if (actionResource == null)
+            {
+                return;
+            }
             if (!mouseDown)
             {
                 count++;
                 if (count > MaxCount)
                 {
                     MaxCount = r.Next(70) + 30;
-                    if (speedMode) timerSpeed.Interval = 50;
 
                     count = 0;
                     stepX = (float)r.NextDouble() * 3f + 1f;
@@ -127,10 +125,8 @@ namespace XifanPet
                 this.Left = (int)left;
                 this.Top = (int)top;
             }
-            frame++;
-            if (frame >= frameCount) frame = 0;
-
-            SetBits(FrameImage);
+            actionResource.GetFrame(toRight);
+            SetBits(actionResource.GetPic(toRight));
         }
 
         private void FixLeftTop()
@@ -138,13 +134,11 @@ namespace XifanPet
             if (toRight && left > 1000)
             {
                 toRight = false;
-                frame = 0;
                 count = 0;
             }
             else if (!toRight && left < 100)
             {
                 toRight = true;
-                frame = 0;
                 count = 0;
             }
             if (top < 100)
@@ -156,47 +150,6 @@ namespace XifanPet
             {
                 stepY = -1f;
                 count = 0;
-            }
-        }
-
-        /// <summary>
-        /// 背景图片
-        /// </summary>
-        private Image FullImage
-        {
-            get
-            {
-                if (toRight)
-                    //return Pet.Properties.Resources.Right;
-                    //return Pic.RightP;
-                    return Resource.rightP;
-                else
-                    //return Pet.Properties.Resources.Left;
-                    //return Pic.LeftP;
-                    return Resource.leftP;
-            }
-        }
-        
-
-        private Dictionary<string, Bitmap> picTemp = new Dictionary<string, Bitmap>();
-
-        /// <summary>
-        /// 返回当前帧图片
-        /// </summary>
-        public Bitmap FrameImage
-        {
-            get
-            {
-                string key = toRight + ":" + frame;
-                if (!picTemp.ContainsKey(key))
-                {
-
-                    Bitmap bitmap = new Bitmap(frameWidth, frameHeight);
-                    Graphics g = Graphics.FromImage(bitmap);
-                    g.DrawImage(FullImage, new Rectangle(0, 0, bitmap.Width, bitmap.Height), new Rectangle(frameWidth * frame, 0, frameWidth, frameHeight), GraphicsUnit.Pixel);
-                    picTemp.Add(key, bitmap);
-                }
-                return picTemp[key];
             }
         }
 
@@ -247,8 +200,12 @@ namespace XifanPet
                 blendFunc.SourceConstantAlpha = 255;
                 blendFunc.AlphaFormat = Win32Api.AC_SRC_ALPHA;
                 blendFunc.BlendFlags = 0;
-
                 Win32Api.UpdateLayeredWindow(Handle, screenDC, ref topLoc, ref bitMapSize, memDc, ref srcLoc, 0, ref blendFunc, Win32Api.ULW_ALPHA);
+
+            }
+            catch (ObjectDisposedException ignore)
+            {
+                Console.WriteLine(ignore.ToString());
             }
             finally
             {
@@ -270,6 +227,21 @@ namespace XifanPet
             //Console.WriteLine(Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE));
             l = Life.getInstance();
             DynamicMenu.LoadAllPlugs(this.contextMenuStripIcon);
+            DynamicPet.LoadAllPets();
+            InitPet();
+        }
+
+        private void InitPet()
+        {
+            List<string> petTypes = DynamicPet.GetPetTypes();
+            if (petTypes.Count == 0)
+            {
+                return;
+            }
+            pet = DynamicPet.GetPet(petTypes[0]);
+            actionResource = pet.GetAction();
+            toRight = actionResource.Right;
+            left = -actionResource.Width;
         }
 
         private void 关闭ToolStripMenuItem_Click(object sender, EventArgs e)
