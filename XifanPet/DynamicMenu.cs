@@ -46,19 +46,15 @@ namespace XifanPet
                         Type[] types = ab.GetTypes();
                         foreach (Type t in types)
                         {
-                            Console.WriteLine(t);
                             //如果某些类实现了预定义的IMsg.IMsgPlug接口，则认为该类适配与主程序(是主程序的插件)
                             if (t.GetInterface("IPetPlug") != null)
                             {
                                 if (!plugins.ContainsKey(t.FullName))
                                 {
-                                    Object selObj = ab.CreateInstance(t.FullName);
-                                    plugins.Add(t.FullName, (IPetPlug) selObj);
-                                    t.GetMethod("Initialization").Invoke(selObj, null);
-                                    MethodInfo GetMenu = t.GetMethod("GetMenu");
-                                    Object menuO = GetMenu.Invoke(selObj, null);
-                                    Iplugin.Menu[] menu = (Iplugin.Menu[])menuO;
-                                    setMenu(menu, selObj);
+                                    IPetPlug selObj = (IPetPlug)ab.CreateInstance(t.FullName);
+                                    plugins.Add(t.FullName, selObj);
+                                    selObj.Initialization();
+                                    setMenu(selObj.GetMenu(), selObj);
                                 }
                             }
                         }
@@ -74,7 +70,7 @@ namespace XifanPet
         /// 动态生成插件菜单
         /// </summary>
         /// <param name="menus">菜单</param>
-        private static void setMenu(Iplugin.Menu[] menus, Object o)
+        private static void setMenu(Iplugin.Menu[] menus, IPetPlug o)
         {
             ToolStripItemCollection item = _contextMenuStrip.Items;
             for (int i = 0; i < menus.Length; i++)
@@ -150,31 +146,23 @@ namespace XifanPet
         static void menu_Click(object sender, EventArgs e)
         {
             ToolStripMenuItem tool = (ToolStripMenuItem)sender;
-            Object o = tool.Tag;
-            Type t = o.GetType();
-            MethodInfo OpenPlug = t.GetMethod("OpenPlug");
-            OpenPlug.Invoke(o, null);
+            IPetPlug o = (IPetPlug)tool.Tag;
+            o.OpenPlug();
         }
 
         public static void closeAllPlugins()
         {
-            foreach (object o in plugins.Values)
+            foreach (IPetPlug o in plugins.Values)
             {
                 closePlugin(o);
             }
         }
 
-        public static void closePlugin(object o)
+        public static void closePlugin(IPetPlug o)
         {
             if (o != null)
             {
-                try
-                {
-                    Type t = o.GetType();
-                    MethodInfo Close = t.GetMethod("Close");
-                    Close.Invoke(o, null);
-                }
-                catch (Exception) { }
+                o.Close();
             }
         }
     }

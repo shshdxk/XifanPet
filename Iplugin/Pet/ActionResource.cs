@@ -21,6 +21,8 @@ namespace Iplugin.Pet
         /// </summary>
         private List<Bitmap> rightPics = new List<Bitmap>();
 
+        public string Name { get; }
+
         /// <summary>
         /// 获取指定帧图片
         /// </summary>
@@ -53,6 +55,7 @@ namespace Iplugin.Pet
         /// </summary>
         public Boolean Right { get; }
 
+        public Boolean Walk { get; set; }
         /// <summary>
         /// 第几帧
         /// </summary>
@@ -71,13 +74,15 @@ namespace Iplugin.Pet
             return f;
         }
 
-        public ActionResource(List<Bitmap> leftPics, List<Bitmap> rightPics, int width, int height, bool right)
+        public ActionResource(string name, List<Bitmap> leftPics, List<Bitmap> rightPics, int width, int height, bool right)
         {
+            this.Name = name;
             this.leftPics = leftPics;
             this.rightPics = rightPics;
             Width = width;
             Height = height;
             Right = right;
+            Walk = true;
         }
     }
 }

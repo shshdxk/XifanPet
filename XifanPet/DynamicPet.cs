@@ -21,6 +21,10 @@ namespace XifanPet
         {
             return pets.Keys.ToList();
         }
+        public static Dictionary<String, IPet> GetPets()
+        {
+            return pets;
+        }
 
         public static IPet GetPet(String type)
         {
@@ -60,13 +64,11 @@ namespace XifanPet
                             //如果某些类实现了预定义的IMsg.IMsgPlug接口，则认为该类适配与主程序(是主程序的插件)
                             if (t.GetInterface("IPet") != null)
                             {
-                                Console.WriteLine(fileP.FullName + "  00000000");
-                                Console.WriteLine(t.FullName + "  11111111");
                                 if (!pets.ContainsKey(t.FullName))
                                 {
-                                    Object selObj = ab.CreateInstance(t.FullName);
-                                    t.GetMethod("Initialization").Invoke(selObj, null);
-                                    pets.Add(t.FullName, (IPet)selObj);
+                                    IPet selObj = (IPet)ab.CreateInstance(t.FullName);
+                                    selObj.Initialization();
+                                    pets.Add(t.FullName, selObj);
                                 }
                             }
                         }

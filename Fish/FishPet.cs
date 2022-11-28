@@ -38,7 +38,7 @@ namespace Fish
                 Graphics.FromImage(leftPic).DrawImage(image, new Rectangle(0, 0, width, height), new Rectangle(widthStart+width, 0, -width, height), GraphicsUnit.Pixel);
                 leftPics.Add(leftPic);
             }
-            actionResource = new ActionResource(leftPics, rightPics, width, height, isRight);
+            actionResource = new ActionResource("鱼", leftPics, rightPics, width, height, isRight);
         }
 
         /// <summary>

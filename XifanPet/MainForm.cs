@@ -81,9 +81,12 @@ namespace XifanPet
 
         void Form2_MouseUp(object sender, MouseEventArgs e)
         {
-            count = 0;
-            MaxCount = r.Next(70) + 40;
-            timerSpeed.Interval = r.Next(20) + 2;
+            if (actionResource.Walk)
+            {
+                count = 0;
+                MaxCount = r.Next(70) + 40;
+                timerSpeed.Interval = r.Next(20) + 2;
+            }
             //speedMode = true;
             mouseDown = false;
         }
@@ -102,7 +105,7 @@ namespace XifanPet
             {
                 return;
             }
-            if (!mouseDown)
+            if (actionResource.Walk && !mouseDown)
             {
                 count++;
                 if (count > MaxCount)
@@ -178,8 +181,8 @@ namespace XifanPet
         {
             if (!haveHandle) return;
 
-            if (!Bitmap.IsCanonicalPixelFormat(bitmap.PixelFormat) || !Bitmap.IsAlphaPixelFormat(bitmap.PixelFormat))
-                throw new ApplicationException("图片必须是32位带Alhpa通道的图片。");
+            //if (!Bitmap.IsCanonicalPixelFormat(bitmap.PixelFormat) || !Bitmap.IsAlphaPixelFormat(bitmap.PixelFormat))
+            //    throw new ApplicationException("图片必须是32位带Alhpa通道的图片。");
 
             IntPtr oldBits = IntPtr.Zero;
             IntPtr screenDC = Win32Api.GetDC(IntPtr.Zero);
@@ -238,10 +241,37 @@ namespace XifanPet
             {
                 return;
             }
+            foreach (IPet ipet in DynamicPet.GetPets().Values)
+            {
+                ToolStripMenuItem menu = new ToolStripMenuItem(ipet.GetAction().Name);
+                menu.Tag = ipet;
+                menu.Click += new EventHandler(PetMenuClick);
+                宠物ToolStripMenuItem.DropDownItems.Add(menu);
+            }
+            ((ToolStripMenuItem)宠物ToolStripMenuItem.DropDownItems[0]).Checked = true;
             pet = DynamicPet.GetPet(petTypes[0]);
             actionResource = pet.GetAction();
             toRight = actionResource.Right;
-            left = -actionResource.Width;
+        }
+
+        /// <summary>
+        /// 宠物菜单的单击事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PetMenuClick(object sender, EventArgs e)
+        {
+            foreach (ToolStripMenuItem menu in 宠物ToolStripMenuItem.DropDownItems)
+            {
+                menu.Checked= false;
+            }
+            ToolStripMenuItem petMeun = (ToolStripMenuItem)sender;
+            petMeun.Checked = true;
+            IPet ipet = (IPet)petMeun.Tag;
+            petMeun.Checked = true;
+            pet = ipet;
+            actionResource = pet.GetAction();
+            toRight = actionResource.Right;
         }
 
         private void 关闭ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -253,11 +283,13 @@ namespace XifanPet
         private void 穿透ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            穿透ToolStripMenuItem.Checked = true;
         }
 
         private void 恢复ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
+            穿透ToolStripMenuItem.Checked = false;
         }
 
         private Life l = null;
