@@ -261,9 +261,13 @@ namespace XifanPet
         /// <param name="e"></param>
         private void PetMenuClick(object sender, EventArgs e)
         {
+            if (宠物ToolStripMenuItem.DropDownItems.Count <= 1)
+            {
+                return;
+            }
             foreach (ToolStripMenuItem menu in 宠物ToolStripMenuItem.DropDownItems)
             {
-                menu.Checked= false;
+                menu.Checked = false;
             }
             ToolStripMenuItem petMeun = (ToolStripMenuItem)sender;
             petMeun.Checked = true;

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDescription", "FileDesc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fish", "Fish\Fish.csproj", "{F240491B-A0D6-4121-8747-915D3B5B6C2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clock1", "Clock1\Clock1.csproj", "{D2832872-669A-4FBB-BC81-E3979647F465}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{F240491B-A0D6-4121-8747-915D3B5B6C2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F240491B-A0D6-4121-8747-915D3B5B6C2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F240491B-A0D6-4121-8747-915D3B5B6C2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2832872-669A-4FBB-BC81-E3979647F465}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2832872-669A-4FBB-BC81-E3979647F465}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2832872-669A-4FBB-BC81-E3979647F465}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2832872-669A-4FBB-BC81-E3979647F465}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

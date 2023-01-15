@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using Iplugin;
 
-namespace FileDescription
+namespace Clock1
 {
-    public class FileDescriptionStart : IPetPlug
+    public class Clock1Start : IPetPlug
     {
-        private Form1 mp = null;
+        private Clock1 mp = null;
         private Menu[] menus = { };
         /// <summary>
         /// 初始化
         /// </summary>
         public void Initialization() {
-            menus = new Menu[]{ new Menu("工具", 9999), new Menu("文件描述", 2) };
+            menus = new Menu[]{ new Menu("时钟", 10), new Menu("数字时钟", 1), new Menu("时钟1", 1) };
         }
         /// <summary>
         /// 打开插件
@@ -22,7 +22,7 @@ namespace FileDescription
         {
             if (mp == null || mp.IsDisposed)
             {
-                mp = new Form1();
+                mp = new Clock1();
             }
             mp.Show();
         }
