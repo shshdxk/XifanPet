@@ -21,6 +21,10 @@ namespace XifanPet
         ///</summary>
         private static Dictionary<String, IPetPlug> plugins = new Dictionary<String, IPetPlug>();
         ///<summary>
+        /// 使用的插件的集合
+        ///</summary>
+        private static Dictionary<String, IPetPlug> usedPlugins = new Dictionary<String, IPetPlug>();
+        ///<summary>
         /// 载入所有插件
         ///</summary>
         public static void LoadAllPlugs(ContextMenuStrip contextMenuStrip)
@@ -54,7 +58,7 @@ namespace XifanPet
                                     IPetPlug selObj = (IPetPlug)ab.CreateInstance(t.FullName);
                                     plugins.Add(t.FullName, selObj);
                                     selObj.Initialization();
-                                    setMenu(selObj.GetMenu(), selObj);
+                                    SetMenu(selObj.GetMenu(), selObj);
                                 }
                             }
                         }
@@ -70,7 +74,7 @@ namespace XifanPet
         /// 动态生成插件菜单
         /// </summary>
         /// <param name="menus">菜单</param>
-        private static void setMenu(Iplugin.Menu[] menus, IPetPlug o)
+        private static void SetMenu(Iplugin.Menu[] menus, IPetPlug o)
         {
             ToolStripItemCollection item = _contextMenuStrip.Items;
             for (int i = 0; i < menus.Length; i++)
@@ -147,23 +151,38 @@ namespace XifanPet
         {
             ToolStripMenuItem tool = (ToolStripMenuItem)sender;
             IPetPlug o = (IPetPlug)tool.Tag;
+            string key = o.GetType().FullName;
+            if (!usedPlugins.ContainsKey(key))
+            {
+                usedPlugins.Add(key, o);
+            }
             o.OpenPlug();
         }
 
-        public static void closeAllPlugins()
+        public static void CloseAllPlugins()
         {
             foreach (IPetPlug o in plugins.Values)
             {
-                closePlugin(o);
+                ClosePlugin(o);
             }
         }
 
-        public static void closePlugin(IPetPlug o)
+        public static void ClosePlugin(IPetPlug o)
         {
             if (o != null)
             {
                 o.Close();
+                string key = o.GetType().FullName;
+                if (usedPlugins.ContainsKey(key))
+                {
+                    usedPlugins.Remove(key);
+                }
             }
+        }
+
+        public static Dictionary<string, IPetPlug> GetUsedPlugins()
+        {
+            return usedPlugins;
         }
     }
 }

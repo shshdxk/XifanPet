@@ -44,5 +44,15 @@ namespace Clock1
                 mp.Close();
             }
         }
+
+        public void MouseThrough()
+        {
+            mp.MouseThrough();
+        }
+
+        public void MouseRecover()
+        {
+            mp.MouseRecover();
+        }
     }
 }

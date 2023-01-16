@@ -21,6 +21,14 @@ namespace Iplugin
         /// <returns></returns>
         Menu[] GetMenu();
         /// <summary>
+        /// 鼠标穿透动作
+        /// </summary>
+        void MouseThrough();
+        /// <summary>
+        /// 鼠标恢复动作
+        /// </summary>
+        void MouseRecover();
+        /// <summary>
         /// 关闭时调用
         /// </summary>
         void Close();

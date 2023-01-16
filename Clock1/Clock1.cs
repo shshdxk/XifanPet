@@ -24,11 +24,13 @@ namespace Clock1
         }
 
         Timer timer = new Timer();
+        private Boolean through;
+        private Bitmap bitmapTime;
 
         private void Clock1_Load(object sender, EventArgs e)
         {
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_LAYERED);
-            Console.WriteLine(Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE));
+            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE);
             timer.Interval = 20;
             timer.Enabled = true;
             timer.Tick += new EventHandler(timerTick);
@@ -39,10 +41,13 @@ namespace Clock1
             DateTime now = DateTime.Now;
             String nowStr = now.ToString("HH:mm:ss");
             label1.Text = nowStr;
-            Bitmap bitmap = new Bitmap(this.Width, this.Height);
-            Graphics g = Graphics.FromImage(bitmap);
-            g.DrawString(nowStr, new Font("Arial", 16), new SolidBrush(Color.Black), 0, 0);
-            SetBits(bitmap);
+            if (through)
+            {
+                bitmapTime = new Bitmap(this.Width, this.Height);
+                Graphics g = Graphics.FromImage(bitmapTime);
+                g.DrawString(nowStr, new Font("Arial", 16), new SolidBrush(Color.Black), 0, 0);
+                SetBits(bitmapTime);
+            }
         }
 
 
@@ -86,6 +91,17 @@ namespace Clock1
             }
         }
 
+        public void MouseThrough()
+        {
+            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            through = true;
+        }
 
+        public void MouseRecover()
+        {
+            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
+            through = false;
+            this.FormBorderStyle = FormBorderStyle.Sizable;
+        }
     }
 }

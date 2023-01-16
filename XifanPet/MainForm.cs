@@ -11,6 +11,7 @@ using System.IO;
 using System.Reflection;
 using Rep;
 using Iplugin.Pet;
+using Iplugin;
 
 namespace XifanPet
 {
@@ -280,13 +281,17 @@ namespace XifanPet
 
         private void 关闭ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DynamicMenu.closeAllPlugins();
+            DynamicMenu.CloseAllPlugins();
             this.Dispose();
         }
 
         private void 穿透ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            foreach ( IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
+            {
+                plugin.MouseThrough();
+            }
             穿透ToolStripMenuItem.Checked = true;
         }
 
@@ -294,6 +299,10 @@ namespace XifanPet
         {
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             穿透ToolStripMenuItem.Checked = false;
+            foreach (IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
+            {
+                plugin.MouseRecover();
+            }
         }
 
         private Life l = null;

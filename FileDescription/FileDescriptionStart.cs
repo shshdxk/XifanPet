@@ -44,5 +44,10 @@ namespace FileDescription
                 mp.Close();
             }
         }
+
+        public void MouseThrough() { }
+
+        public void MouseRecover() { }
+        
     }
 }
