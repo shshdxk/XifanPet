@@ -157,6 +157,16 @@ namespace XifanPet
                 usedPlugins.Add(key, o);
             }
             o.OpenPlug();
+            ToolStripItemCollection item = _contextMenuStrip.Items;
+            if (((ToolStripMenuItem)item.Find("穿透ToolStripMenuItem", false)[0]).Checked)
+            {
+                o.MouseThrough();
+            }
+            else
+            {
+                o.MouseRecover();
+            }
+
         }
 
         public static void CloseAllPlugins()

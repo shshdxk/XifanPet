@@ -24,7 +24,7 @@ namespace Clock1
             {
                 mp = new Clock1();
             }
-            mp.Show();
+            //mp.Show();
         }
         /// <summary>
         /// 获取菜单
@@ -48,11 +48,13 @@ namespace Clock1
         public void MouseThrough()
         {
             mp.MouseThrough();
+            mp.Show();
         }
 
         public void MouseRecover()
         {
             mp.MouseRecover();
+            mp.Show();
         }
     }
 }

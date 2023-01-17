@@ -32,13 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStripIcon = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.宠物ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.穿透ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.恢复ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.吃ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.洗ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关闭ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.宠物ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,6 +61,13 @@
             this.关闭ToolStripMenuItem});
             this.contextMenuStripIcon.Name = "contextMenuStripIcon";
             this.contextMenuStripIcon.Size = new System.Drawing.Size(181, 180);
+            this.contextMenuStripIcon.Tag = "through";
+            // 
+            // 宠物ToolStripMenuItem
+            // 
+            this.宠物ToolStripMenuItem.Name = "宠物ToolStripMenuItem";
+            this.宠物ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.宠物ToolStripMenuItem.Text = "宠物";
             // 
             // 显示ToolStripMenuItem
             // 
@@ -75,6 +82,7 @@
             this.穿透ToolStripMenuItem.Checked = true;
             this.穿透ToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.穿透ToolStripMenuItem.Name = "穿透ToolStripMenuItem";
+            this.穿透ToolStripMenuItem.ShortcutKeyDisplayString = "";
             this.穿透ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.穿透ToolStripMenuItem.Text = "穿透";
             this.穿透ToolStripMenuItem.Click += new System.EventHandler(this.穿透ToolStripMenuItem_Click);
@@ -106,12 +114,6 @@
             this.关闭ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.关闭ToolStripMenuItem.Text = "退出";
             this.关闭ToolStripMenuItem.Click += new System.EventHandler(this.关闭ToolStripMenuItem_Click);
-            // 
-            // 宠物ToolStripMenuItem
-            // 
-            this.宠物ToolStripMenuItem.Name = "宠物ToolStripMenuItem";
-            this.宠物ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.宠物ToolStripMenuItem.Text = "宠物";
             // 
             // MainForm
             // 

@@ -288,7 +288,7 @@ namespace XifanPet
         private void 穿透ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            foreach ( IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
+            foreach (IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
             {
                 plugin.MouseThrough();
             }

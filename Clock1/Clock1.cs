@@ -23,14 +23,66 @@ namespace Clock1
             InitializeComponent();
         }
 
-        Timer timer = new Timer();
+        private Timer timer = new Timer();
         private Boolean through;
-        private Bitmap bitmapTime;
+        private Bitmap bitmapTime = null;
+        private Graphics g;
+        private Boolean isShow = false;
+        private Font font = new Font("Arial", 16);
+
+        #region 重载
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            e.Cancel = true;
+            base.OnClosing(e);
+            isShow = false;
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            //InitializeStylesThrough();
+            base.OnHandleCreated(e);
+            isShow = true;
+        }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cParms = base.CreateParams;
+                if (through)
+                {
+                    cParms.ExStyle |= 0x00080000; // WS_EX_LAYERED=
+                } 
+                else
+                {
+                    cParms.ExStyle &= 0x00080000; // WS_EX_LAYERED
+                }
+                return cParms;
+            }
+        }
+
+        #endregion
+        private void InitializeStylesThrough()
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            SetStyle(ControlStyles.UserPaint, true);
+            UpdateStyles();
+        }
+
+        private void InitializeStylesRecover()
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint, false);
+            SetStyle(ControlStyles.UserPaint, false);
+            UpdateStyles();
+        }
 
         private void Clock1_Load(object sender, EventArgs e)
         {
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE);
+            //this.Hide();
+            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            //Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE);
             timer.Interval = 20;
             timer.Enabled = true;
             timer.Tick += new EventHandler(timerTick);
@@ -43,9 +95,13 @@ namespace Clock1
             label1.Text = nowStr;
             if (through)
             {
-                bitmapTime = new Bitmap(this.Width, this.Height);
-                Graphics g = Graphics.FromImage(bitmapTime);
-                g.DrawString(nowStr, new Font("Arial", 16), new SolidBrush(Color.Black), 0, 0);
+                if (bitmapTime == null)
+                {
+                    bitmapTime = new Bitmap(this.Width, this.Height);
+                    g = Graphics.FromImage(bitmapTime);
+                }
+                g.Clear(Color.Transparent);
+                g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
                 SetBits(bitmapTime);
             }
         }
@@ -93,15 +149,38 @@ namespace Clock1
 
         public void MouseThrough()
         {
+            InitializeStylesThrough();
+            this.FormBorderStyle = FormBorderStyle.None;
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             through = true;
+            this.isShow = true;
+            this.Show();
         }
 
         public void MouseRecover()
         {
+            InitializeStylesRecover();
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             through = false;
             this.FormBorderStyle = FormBorderStyle.Sizable;
+            this.isShow = true;
+            this.Show();
+        }
+
+        private void Clock1_SizeChanged(object sender, EventArgs e)
+        {
+            this.panel1.Width = this.Width;
+            this.panel1.Height= this.Height - 45;
+            double width = (this.Width - 20) / 5.62;
+            double height = (this.Height - 60) / 1.5;
+            double size = Math.Min(width, height);
+            font = new Font("Arial", (int)size);
+            label1.Font = font;
+            if (bitmapTime != null)
+            {
+                bitmapTime.Dispose();
+                bitmapTime = null;
+            }
         }
     }
 }
