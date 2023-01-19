@@ -11,8 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinSystem;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace Clock1
 {
@@ -27,8 +25,21 @@ namespace Clock1
         private Boolean through;
         private Bitmap bitmapTime = null;
         private Graphics g;
-        private Boolean isShow = false;
+        private Graphics gp = null;
         private Font font = new Font("Arial", 16);
+        private Boolean isMove = false;
+        // 窗口顶点x坐标
+        private int wStartX = 0;
+        // 窗口顶点y坐标
+        private int wStartY = 0;
+        // 窗口长
+        private int wHeight = 0;
+        // 窗口高
+        private int wWidth = 0;
+        // 鼠标1x坐标
+        private int p1x = 0;
+        // 鼠标1y坐标
+        private int p1y = 0;
 
         #region 重载
 
@@ -36,14 +47,12 @@ namespace Clock1
         {
             e.Cancel = true;
             base.OnClosing(e);
-            isShow = false;
         }
 
         protected override void OnHandleCreated(EventArgs e)
         {
             //InitializeStylesThrough();
             base.OnHandleCreated(e);
-            isShow = true;
         }
 
         protected override CreateParams CreateParams
@@ -53,7 +62,7 @@ namespace Clock1
                 CreateParams cParms = base.CreateParams;
                 if (through)
                 {
-                    cParms.ExStyle |= 0x00080000; // WS_EX_LAYERED=
+                    cParms.ExStyle |= 0x00080000; // WS_EX_LAYERED
                 } 
                 else
                 {
@@ -80,9 +89,6 @@ namespace Clock1
 
         private void Clock1_Load(object sender, EventArgs e)
         {
-            //this.Hide();
-            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            //Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE);
             timer.Interval = 20;
             timer.Enabled = true;
             timer.Tick += new EventHandler(timerTick);
@@ -90,20 +96,34 @@ namespace Clock1
 
         void timerTick(object sender, EventArgs e)
         {
-            DateTime now = DateTime.Now;
-            String nowStr = now.ToString("HH:mm:ss");
-            label1.Text = nowStr;
-            if (through)
+            try
             {
+                DateTime now = DateTime.Now;
+                String nowStr = now.ToString("HH:mm:ss");
                 if (bitmapTime == null)
                 {
                     bitmapTime = new Bitmap(this.Width, this.Height);
                     g = Graphics.FromImage(bitmapTime);
+                    gp = panel1.CreateGraphics();
                 }
-                g.Clear(Color.Transparent);
-                g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
-                SetBits(bitmapTime);
+                if (through)
+                {
+                    g.Clear(Color.Transparent);
+                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
+                    SetBits(bitmapTime);
+                }
+                else
+                {
+                    g.Clear(Color.White);
+                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
+                    gp.DrawImage(bitmapTime, 0, 0);
+                }
             }
+            catch (Exception ignore)
+            {
+                Console.WriteLine(ignore.ToString());
+            }
+
         }
 
 
@@ -153,7 +173,6 @@ namespace Clock1
             this.FormBorderStyle = FormBorderStyle.None;
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             through = true;
-            this.isShow = true;
             this.Show();
         }
 
@@ -162,25 +181,124 @@ namespace Clock1
             InitializeStylesRecover();
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             through = false;
-            this.FormBorderStyle = FormBorderStyle.Sizable;
-            this.isShow = true;
+            this.FormBorderStyle = FormBorderStyle.None;
             this.Show();
         }
 
         private void Clock1_SizeChanged(object sender, EventArgs e)
         {
             this.panel1.Width = this.Width;
-            this.panel1.Height= this.Height - 45;
+            this.panel1.Height = this.Height - 22;
             double width = (this.Width - 20) / 5.62;
-            double height = (this.Height - 60) / 1.5;
+            double height = (this.Height - 30) / 1.5;
             double size = Math.Min(width, height);
             font = new Font("Arial", (int)size);
-            label1.Font = font;
             if (bitmapTime != null)
             {
                 bitmapTime.Dispose();
                 bitmapTime = null;
+                g.Dispose();
+                gp.Dispose();
+                gp = null;
+                g = null;
+            }
+            panelBottom.Top = this.Height - 3;
+            panelBottom.Width = this.Width - 10;
+            panelRight.Left = this.Width - 3;
+            panelRight.Height = this.Height - 10;
+            panelN.Left = this.Width - 10;
+            panelN.Top = this.Height - 10;
+
+        }
+
+        #region panel1移动事件
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMove)
+            {
+                this.Left = this.Left + e.X - p1x;
+                this.Top = this.Top + e.Y - p1y;
             }
         }
+
+        private void panel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMove = false;
+        }
+
+        private void panel1_MouseDown(object sender, MouseEventArgs e)
+        {
+            isMove = true;
+            p1x = e.X;
+            p1y = e.Y;
+        }
+        #endregion
+
+        #region panelRight移动事件
+
+        private void panelRight_MouseDown(object sender, MouseEventArgs e)
+        {
+            isMove = true;
+            p1x = e.X;
+        }
+
+        private void panelRight_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMove)
+            {
+                this.Width = this.Width + e.X - p1x;
+            }
+        }
+
+        private void panelRight_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMove = false;
+        }
+        #endregion
+
+        #region panelBottom移动事件
+        private void panelBottom_MouseDown(object sender, MouseEventArgs e)
+        {
+            isMove = true;
+            p1y = e.Y;
+        }
+
+        private void panelBottom_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMove = false;
+        }
+
+        private void panelBottom_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMove)
+            {
+                this.Height = this.Height + e.Y - p1y;
+            }
+        }
+        #endregion
+
+        #region panelN移动事件
+        private void panelN_MouseDown(object sender, MouseEventArgs e)
+        {
+            isMove = true;
+            p1x = e.X;
+            p1y = e.Y;
+        }
+
+        private void panelN_MouseUp(object sender, MouseEventArgs e)
+        {
+            isMove = false;
+        }
+
+        private void panelN_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (isMove)
+            {
+                this.Height = this.Height + e.Y - p1y;
+                this.Width = this.Width + e.X - p1x;
+            }
+        }
+        #endregion
+    
     }
 }
