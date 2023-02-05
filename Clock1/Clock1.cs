@@ -6,7 +6,9 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,23 +22,25 @@ namespace Clock1
         public Clock1()
         {
             InitializeComponent();
+            pfc = new PrivateFontCollection();
+            byte[] fontBytes = Properties.Resources._7Segment;
+            IntPtr fontData = Marshal.AllocCoTaskMem(fontBytes.Length);
+            Marshal.Copy(fontBytes, 0, fontData, fontBytes.Length);
+            pfc.AddMemoryFont(fontData, fontBytes.Length);
+            Marshal.FreeCoTaskMem(fontData);
+            font = ReadFont(20);
         }
+        //private Font font = new Font("Arial", 16);
+
+        PrivateFontCollection pfc = null;
+        private Font font = null;
 
         private Timer timer = new Timer();
         private Boolean through;
         private Bitmap bitmapTime = null;
         private Graphics g;
         private Graphics gp = null;
-        private Font font = new Font("Arial", 16);
         private Boolean isMove = false;
-        // 窗口顶点x坐标
-        private int wStartX = 0;
-        // 窗口顶点y坐标
-        private int wStartY = 0;
-        // 窗口长
-        private int wHeight = 0;
-        // 窗口高
-        private int wWidth = 0;
         // 鼠标1x坐标
         private int p1x = 0;
         // 鼠标1y坐标
@@ -97,6 +101,10 @@ namespace Clock1
 
         void timerTick(object sender, EventArgs e)
         {
+            if (font == null)
+            {
+                return;
+            }
             try
             {
                 DateTime now = DateTime.Now;
@@ -191,10 +199,15 @@ namespace Clock1
         {
             this.panel1.Width = this.Width;
             this.panel1.Height = this.Height - 22;
-            double width = (this.Width - 20) / 5.62;
-            double height = (this.Height - 30) / 1.5;
+            double width = this.Width / 5.8;
+            double height = (this.Height - statusStrip1.Height) / 1.5;
             double size = Math.Min(width, height);
-            font = new Font("Arial", (int)size);
+            if (font != null)
+            {
+                font.Dispose();
+                font = null;
+            }
+            font = ReadFont((float)size);
             if (bitmapTime != null)
             {
                 bitmapTime.Dispose();
@@ -211,6 +224,10 @@ namespace Clock1
             panelN.Left = this.Width - 10;
             panelN.Top = this.Height - 10;
 
+        }
+        private Font ReadFont(float size)
+        {
+            return new Font(pfc.Families[0], (float)size);
         }
 
         #region panel1移动事件
