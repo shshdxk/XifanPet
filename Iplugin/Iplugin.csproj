@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PetPlug.cs" />
     <Compile Include="Pet\ActionResource.cs" />
     <Compile Include="Pet\IPet.cs" />
     <Compile Include="IPetPlug.cs" />

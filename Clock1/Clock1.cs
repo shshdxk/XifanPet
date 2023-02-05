@@ -1,4 +1,6 @@
-﻿using Iplugin.Pet;
+﻿using Clock1.Properties;
+using Iplugin.Pet;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +8,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -19,19 +22,7 @@ namespace Clock1
 {
     public partial class Clock1 : Form
     {
-        public Clock1()
-        {
-            InitializeComponent();
-            pfc = new PrivateFontCollection();
-            byte[] fontBytes = Properties.Resources._7Segment;
-            IntPtr fontData = Marshal.AllocCoTaskMem(fontBytes.Length);
-            Marshal.Copy(fontBytes, 0, fontData, fontBytes.Length);
-            pfc.AddMemoryFont(fontData, fontBytes.Length);
-            Marshal.FreeCoTaskMem(fontData);
-            font = ReadFont(20);
-        }
-        //private Font font = new Font("Arial", 16);
-
+        string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         PrivateFontCollection pfc = null;
         private Font font = null;
 
@@ -45,6 +36,56 @@ namespace Clock1
         private int p1x = 0;
         // 鼠标1y坐标
         private int p1y = 0;
+
+        private Setting setting = new Setting();
+        Boolean initing = true;
+
+        public Clock1()
+        {
+            InitializeComponent();
+            Init();
+        }
+
+        private void Init()
+        {
+            pfc = new PrivateFontCollection();
+            byte[] fontBytes = Properties.Resources.digitalDisplay;
+            IntPtr fontData = Marshal.AllocCoTaskMem(fontBytes.Length);
+            Marshal.Copy(fontBytes, 0, fontData, fontBytes.Length);
+            pfc.AddMemoryFont(fontData, fontBytes.Length);
+            Marshal.FreeCoTaskMem(fontData);
+            string settingPath = path + @"\setting.json";
+            if (File.Exists(settingPath))
+            {
+                using (StreamReader sr = new StreamReader(settingPath))
+                {
+                    try
+                    {
+                        setting = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd());
+                        if (setting.Width < 50)
+                        {
+                            setting.Width = 50;
+                        }
+                        if (setting.Height < 60)
+                        {
+                            setting.Height = 60;
+                        }
+                        this.Top = setting.Top;
+                        this.Left = setting.Left;
+                        this.Width = setting.Width;
+                        this.Height = setting.Height;
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            else
+            {
+                font = ReadFont(20);
+            }
+            initing = false;
+        }
 
         #region 重载
 
@@ -243,6 +284,7 @@ namespace Clock1
         private void panel1_MouseUp(object sender, MouseEventArgs e)
         {
             isMove = false;
+            SaveSetting();
         }
 
         private void panel1_MouseDown(object sender, MouseEventArgs e)
@@ -272,6 +314,7 @@ namespace Clock1
         private void panelRight_MouseUp(object sender, MouseEventArgs e)
         {
             isMove = false;
+            SaveSetting();
         }
         #endregion
 
@@ -285,6 +328,7 @@ namespace Clock1
         private void panelBottom_MouseUp(object sender, MouseEventArgs e)
         {
             isMove = false;
+            SaveSetting();
         }
 
         private void panelBottom_MouseMove(object sender, MouseEventArgs e)
@@ -307,6 +351,7 @@ namespace Clock1
         private void panelN_MouseUp(object sender, MouseEventArgs e)
         {
             isMove = false;
+            SaveSetting();
         }
 
         private void panelN_MouseMove(object sender, MouseEventArgs e)
@@ -319,5 +364,23 @@ namespace Clock1
         }
         #endregion
     
+        private void SaveSetting()
+        {
+            if (initing)
+            {
+                return;
+            }
+            string settingPath = path + @"\setting.json";
+            using (StreamWriter sw = new StreamWriter(settingPath))
+            {
+                setting.Top = this.Top;
+                setting.Left = this.Left;
+                setting.Width = this.Width;
+                setting.Height = this.Height;
+                sw.Write(JsonConvert.SerializeObject(setting));
+            }
+        }
+
+
     }
 }

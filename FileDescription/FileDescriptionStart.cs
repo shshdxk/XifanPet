@@ -5,20 +5,20 @@ using Iplugin;
 
 namespace FileDescription
 {
-    public class FileDescriptionStart : IPetPlug
+    public class FileDescriptionStart : PetPlug
     {
         private Form1 mp = null;
         private Menu[] menus = { };
         /// <summary>
         /// 初始化
         /// </summary>
-        public void Initialization() {
+        public override void Initialization() {
             menus = new Menu[]{ new Menu("工具", 9999), new Menu("文件描述", 2) };
         }
         /// <summary>
         /// 打开插件
         /// </summary>
-        public void OpenPlug()
+        public override void OpenPlug()
         {
             if (mp == null || mp.IsDisposed)
             {
@@ -30,14 +30,14 @@ namespace FileDescription
         /// 获取菜单
         /// </summary>
         /// <returns></returns>
-        public Menu[] GetMenu()
+        public override Menu[] GetMenu()
         {
             return menus;
         }
         /// <summary>
         /// 关闭插件
         /// </summary>
-        public void Close()
+        public override void Close()
         {
             if (mp != null && !mp.IsDisposed)
             {
@@ -45,9 +45,6 @@ namespace FileDescription
             }
         }
 
-        public void MouseThrough() { }
-
-        public void MouseRecover() { }
         
     }
 }

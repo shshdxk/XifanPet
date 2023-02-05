@@ -105,6 +105,7 @@
             this.MinimumSize = new System.Drawing.Size(50, 60);
             this.Name = "Clock1";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Clock1";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.Clock1_Load);
