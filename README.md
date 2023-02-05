@@ -2,7 +2,7 @@ visual studio 2022
 
 # plugins
 XifanPet.exe load the plugins in ./plugins/\*\/*.dll  
-the plugin implements the interface of Iplugin.IPetPlug
+the plugin implements the interface of Iplugin.PetPlug
 
 # pets
 XifanPet.exe load the pet in ./pet/\*\/*.dll  
