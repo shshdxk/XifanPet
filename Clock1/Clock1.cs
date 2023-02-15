@@ -160,13 +160,15 @@ namespace Clock1
                 if (through)
                 {
                     g.Clear(Color.Transparent);
-                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
+                    g.DrawString(nowStr, font, new SolidBrush(Color.FromArgb(128, 128, 128, 128)), 3, 3);
+                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 1, 1);
                     SetBits(bitmapTime);
                 }
                 else
                 {
                     g.Clear(Color.White);
-                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
+                    g.DrawString(nowStr, font, new SolidBrush(Color.FromArgb(128, 128, 128, 128)), 3, 3);
+                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 1, 1);
                     gp.DrawImage(bitmapTime, 0, 0);
                 }
             }

@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D2832872-669A-4FBB-BC81-E3979647F465}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>Clock1</RootNamespace>
-    <AssemblyName>Clock1</AssemblyName>
+    <ProjectGuid>{19E30794-23F5-4BBD-8A39-AAA1561EEBCC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>DesktopCalendar</RootNamespace>
+    <AssemblyName>DesktopCalendar</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -18,7 +18,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\xifanPet\bin\Debug\plugins\Clock1\</OutputPath>
+    <OutputPath>..\xifanPet\bin\Debug\plugins\DesktopCalendar\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -27,7 +27,7 @@
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\xifanPet\bin\Release\plugins\Clock1\</OutputPath>
+    <OutputPath>..\xifanPet\bin\Release\plugins\DesktopCalendar\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -55,18 +55,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Clock1.cs">
+    <Compile Include="DesktopCalendar.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Clock1.Designer.cs">
-      <DependentUpon>Clock1.cs</DependentUpon>
+    <Compile Include="DesktopCalendar.Designer.cs">
+      <DependentUpon>DesktopCalendar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Clock1Start.cs" />
+    <Compile Include="DesktopCalendarStart.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Setting.cs" />
-    <EmbeddedResource Include="Clock1.resx">
-      <DependentUpon>Clock1.cs</DependentUpon>
+    <EmbeddedResource Include="DesktopCalendar.resx">
+      <DependentUpon>DesktopCalendar.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -88,7 +88,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Resources\digitalDisplay.ttf" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -103,5 +102,6 @@
       <Name>PetCommon</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

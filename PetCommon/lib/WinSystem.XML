@@ -1,0 +1,1112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>WinSystem</name>
+    </assembly>
+    <members>
+        <member name="T:WinSystem.Hook.KeyboardHook">
+            <summary>
+            键盘钩子
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.KeyboardHook.OnKeyDownEvent">
+            <summary>
+            键盘按下事件
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.KeyboardHook.OnKeyUpEvent">
+            <summary>
+            键盘松开事件
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.KeyboardHook.OnKeyPressEvent">
+            <summary>
+            键盘敲击事件
+            </summary>
+        </member>
+        <member name="M:WinSystem.Hook.KeyboardHook.#ctor">
+            <summary>
+            键盘钩子
+            </summary>
+        </member>
+        <member name="M:WinSystem.Hook.KeyboardHook.SetHook">
+            <summary>
+            全局注入钩子
+            </summary>
+        </member>
+        <member name="M:WinSystem.Hook.KeyboardHook.UnHook">
+            <summary>
+            卸载钩子
+            </summary>
+        </member>
+        <member name="T:WinSystem.Hook.MouseHook">
+            <summary>
+            鼠标钩子
+            </summary>
+        </member>
+        <member name="F:WinSystem.Hook.MouseHook.outTime">
+            <summary>
+            双击超时时间
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.MouseHook.OnMouseActivity">
+            <summary>
+            鼠标事件
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.MouseHook.OnMouseDoubleClickBActivity">
+            <summary>
+            鼠标双击事件
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.MouseHook.OnMouseDoubleClickFActivity">
+            <summary>
+            鼠标双击事件
+            </summary>
+        </member>
+        <member name="E:WinSystem.Hook.MouseHook.OnMouseBFActivity">
+            <summary>
+            一次点击事件（不区分按下松开事件）
+            </summary>
+        </member>
+        <member name="T:WinSystem.Hook.MouseHook.MouseEventBFHandler">
+            <summary>
+            一次点击事件（区分按下松开事件）
+            </summary>
+            <param name="sender">事件来源</param>
+            <param name="ef">完成的事件</param>
+            <param name="eb">前一次事件</param>
+        </member>
+        <member name="M:WinSystem.Hook.MouseHook.#ctor">
+            <summary>
+            鼠标钩子
+            </summary>
+        </member>
+        <member name="M:WinSystem.Hook.MouseHook.SetHook">
+            <summary>
+            注入全局鼠标钩子
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Hook.MouseHook.UnHook">
+            <summary>
+            卸载鼠标钩子
+            </summary>
+        </member>
+        <member name="T:WinSystem.Hwnd">
+            <summary>
+            句柄操作
+            </summary>
+        </member>
+        <member name="M:WinSystem.Hwnd.getFocusByhwnd(System.IntPtr)">
+            <summary>
+            获取焦点所在窗口句柄
+            </summary>
+            <param name="hwnd">焦点所在窗口或父窗口句柄</param>
+            <returns>焦点所在窗口句柄</returns>
+        </member>
+        <member name="M:WinSystem.Hwnd.isFocus(System.IntPtr)">
+            <summary>
+            判断焦点是否在指定窗口句柄
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <returns>焦点在指定句柄true，焦点不在指定句柄false</returns>
+        </member>
+        <member name="M:WinSystem.Hwnd.isClickHwndIn(System.IntPtr,System.Windows.Forms.MouseEventArgs,System.Windows.Forms.MouseEventArgs,WinSystem.Win32Api.RECT)">
+            <summary>
+            判断鼠标点击的是否是指定窗口句柄
+            </summary>
+            <param name="intptr">指定窗口句柄</param>
+            <param name="ef">松开鼠标事件数据</param>
+            <param name="eb">按下鼠标事件数据</param>
+            <param name="rect">点击确认范围</param>
+            <returns>true:是 false:否</returns>
+        </member>
+        <member name="M:WinSystem.Hwnd.isClickHwnd(System.IntPtr,System.Windows.Forms.MouseEventArgs)">
+            <summary>
+            判断鼠标点击的是否是指定窗口句柄
+            </summary>
+            <param name="intptr">指定窗口句柄</param>
+            <param name="e">鼠标事件数据</param>
+            <returns>true:是 false:否</returns>
+        </member>
+        <member name="M:WinSystem.Hwnd.FindFormStartWith(System.String)">
+            <summary>
+            查找窗口标题是以指定字符串开头的窗口
+            </summary>
+            <param name="titleStart">要比较的字符串</param>
+            <returns>窗口句柄</returns>
+        </member>
+        <member name="M:WinSystem.Hwnd.FindFormStartWith(System.String,System.String@)">
+            <summary>
+            查找窗口标题是以指定字符串开头的窗口
+            </summary>
+            <param name="titleStart">要比较的字符串</param>
+            <param name="title">窗口完整标题</param>
+            <returns>窗口句柄</returns>
+        </member>
+        <member name="M:WinSystem.Hwnd.GetWindowCapture(System.IntPtr,System.String)">
+            <summary>
+            根据句柄截取图像并保存成指定文件（bmp格式），图像可以是被窗口挡着的，但对非GDI程序无效
+            </summary>
+            <param name="intptr">窗口句柄</param>
+            <param name="filePath">保存路径</param>
+        </member>
+        <member name="M:WinSystem.Hwnd.GetWindowCapture(System.IntPtr)">
+            <summary>
+            根据句柄截取图像，图像可以是被窗口挡着的，但对非GDI程序无效
+            </summary>
+            <param name="intptr">窗口句柄</param>
+        </member>
+        <member name="M:WinSystem.Hwnd.FindOneFormCount(System.Collections.Generic.List{System.String[]},System.Int32)">
+            <summary>
+            寻找多个窗口中，第一个出现的窗口（用于等待多个窗口中的一个出现），若多窗口同时存在，随机返回一个
+            </summary>
+            <param name="title">窗口标题，最多支持二级窗口</param>
+            <param name="outTime">超时时间</param>
+            <returns>第几个窗口，失败返回-1</returns>
+        </member>
+        <member name="T:WinSystem.UnixTime">
+            <summary>
+            时间转换处理
+            </summary>
+        </member>
+        <member name="M:WinSystem.UnixTime.StampToDateTime(System.Int64)">
+            <summary>
+            将时间戳转换成DateTime
+            </summary>
+            <param name="timeStamp">时间戳</param>
+            <returns>时间</returns>
+        </member>
+        <member name="M:WinSystem.UnixTime.StampToDateTime(System.String)">
+            <summary>
+            将时间戳转换成DateTime
+            </summary>
+            <param name="timeStamp">时间戳</param>
+            <returns>时间</returns>
+        </member>
+        <member name="M:WinSystem.UnixTime.DateTimeToStamp(System.DateTime)">
+            <summary>
+            DateTime时间格式转换为Unix时间戳格式（毫秒）
+            </summary>
+            <param name="time">时间</param>
+            <returns>时间戳</returns>
+        </member>
+        <member name="T:WinSystem.Win32Api">
+            <summary>
+            调用系统底层函数
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_KEYDOWN">
+            <summary>
+            非系统键按下
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_KEYUP">
+            <summary>
+            非系统键松开
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_SYSKEYDOWN">
+            <summary>
+            系统键按下
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_SYSKEYUP">
+            <summary>
+            非系统键松开
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WH_KEYBOARD_LL">
+            <summary>
+            键盘敲击
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WH_MOUSE_LL">
+            <summary>
+            全局鼠标事件
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WS_SHOWNORMAL">
+            <summary>
+            显示
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_MOUSEMOVE">
+            <summary>
+            移动鼠标时发生，同WM_MOUSEFIRST
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_LBUTTONDOWN">
+            <summary>
+            按下鼠标左键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_LBUTTONUP">
+            <summary>
+            释放鼠标左键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_LBUTTONDBLCLK">
+            <summary>
+            双击鼠标左键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_RBUTTONDOWN">
+            <summary>
+            按下鼠标右键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_RBUTTONUP">
+            <summary>
+             释放鼠标右键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_RBUTTONDBLCLK">
+            <summary>
+            双击鼠标右键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_MBUTTONDOWN">
+            <summary>
+            按下鼠标中键
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WM_MOUSEWHEEL">
+            <summary>
+            鼠标滚轮滚动
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.BM_GETCHECK">
+            <summary>
+            单选复选选中状态
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.AC_SRC_OVER">
+            <summary>
+            通道叠加
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.ULW_ALPHA">
+            <summary>
+            开启α混合
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.AC_SRC_ALPHA">
+            <summary>
+            α通道叠加值
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WS_EX_LAYERED">
+            <summary>
+            使窗体支持透明ModifyStyleEx(0, WS_EX_LAYERED);效果
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.WS_EX_TRANSPARENT">
+            <summary>
+            半透明窗口
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.GWL_STYLE">
+            <summary>
+            设定一个新的窗口风格。
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.GWL_EXSTYLE">
+            <summary>
+            设定一个新的扩展风格。
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.LWA_ALPHA">
+            <summary>
+            表示把窗体设置成半透明样式
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.SM_CXDOUBLECLK">
+            <summary>
+            双击矩形区域的宽
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.SM_CYDOUBLECLK">
+            <summary>
+            双击矩形区域的高
+            </summary>
+        </member>
+        <member name="T:WinSystem.Win32Api.KeyboardHookStruct">
+            <summary>
+            声明键盘钩子的封送结构类型 
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.KeyboardHookStruct.vkCode">
+            <summary>
+            表示一个在1到254间的虚似键盘码
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.KeyboardHookStruct.scanCode">
+            <summary>
+            表示硬件扫描码 
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.KeyboardHookStruct.flags">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.KeyboardHookStruct.time">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.KeyboardHookStruct.dwExtraInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WinSystem.Win32Api.POINT">
+            <summary>
+            鼠标坐标结构类型
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.POINT.x">
+            <summary>
+            x像素
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.POINT.y">
+            <summary>
+            y像素
+            </summary>
+        </member>
+        <member name="M:WinSystem.Win32Api.POINT.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="T:WinSystem.Win32Api.MouseHookStruct">
+            <summary>
+            鼠标钩子结构类型
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.MouseHookStruct.pt">
+            <summary>
+            坐标
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.MouseHookStruct.hwnd">
+            <summary>
+            句柄
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.MouseHookStruct.wHitTestCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.MouseHookStruct.dwExtraInfo">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:WinSystem.Win32Api.RECT">
+            <summary>
+            区域结构类型
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.RECT.left">
+            <summary>
+            左端位置
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.RECT.top">
+            <summary>
+            顶端位置
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.RECT.right">
+            <summary>
+            右端位置
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.RECT.bottom">
+            <summary>
+            下端位置
+            </summary>
+        </member>
+        <member name="T:WinSystem.Win32Api.Size">
+            <summary>
+            窗口大小
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.Size.cx">
+            <summary>
+            窗口x轴宽度
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.Size.cy">
+            <summary>
+            窗口y轴高度
+            </summary>
+        </member>
+        <member name="M:WinSystem.Win32Api.Size.#ctor(System.Int32,System.Int32)">
+            <summary>
+            构造函数
+            </summary>
+            <param name="x"></param>
+            <param name="y"></param>
+        </member>
+        <member name="T:WinSystem.Win32Api.BLENDFUNCTION">
+            <summary>
+            颜色通道
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.BLENDFUNCTION.BlendOp">
+            <summary>
+            BlendOp
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.BLENDFUNCTION.BlendFlags">
+            <summary>
+            BlendFlags
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.BLENDFUNCTION.SourceConstantAlpha">
+            <summary>
+            SourceConstantAlpha
+            </summary>
+        </member>
+        <member name="F:WinSystem.Win32Api.BLENDFUNCTION.AlphaFormat">
+            <summary>
+            AlphaFormat
+            </summary>
+        </member>
+        <member name="T:WinSystem.Win32Api.HookProc">
+            <summary>
+            钩子委托函数
+            </summary>
+            <param name="nCode"></param>
+            <param name="wParam"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SetWindowsHookEx(System.Int32,WinSystem.Win32Api.HookProc,System.IntPtr,System.Int32)">
+            <summary>
+            安装钩子的函数 
+            </summary>
+            <param name="idHook"></param>
+            <param name="lpfn"></param>
+            <param name="hInstance"></param>
+            <param name="threadId"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.UnhookWindowsHookEx(System.Int32)">
+            <summary>
+            卸下钩子的函数 
+            </summary>
+            <param name="idHook"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.CallNextHookEx(System.Int32,System.Int32,System.Int32,System.IntPtr)">
+            <summary>
+            下一个钩挂的函数 
+            </summary>
+            <param name="idHook"></param>
+            <param name="nCode"></param>
+            <param name="wParam"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.CallNextHookEx(System.Int32,System.Int32,System.IntPtr,System.IntPtr)">
+            <summary>
+            下一个钩挂的函数 
+            </summary>
+            <param name="idHook"></param>
+            <param name="nCode"></param>
+            <param name="wParam"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.ToAscii(System.Int32,System.Int32,System.Byte[],System.Byte[],System.Int32)">
+            <summary>
+            转成Ascii编码
+            </summary>
+            <param name="uVirtKey"></param>
+            <param name="uScanCode"></param>
+            <param name="lpbKeyState"></param>
+            <param name="lpwTransKey"></param>
+            <param name="fuState"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetKeyboardState(System.Byte[])">
+            <summary>
+            获取键盘状态
+            </summary>
+            <param name="pbKeyState"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetModuleHandle(System.String)">
+            <summary>
+            获取一个应用程序或动态链接库的模块句柄
+            </summary>
+            <param name="lpModuleName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.FindWindow(System.String,System.String)">
+            <summary>
+            获取窗口句柄
+            </summary>
+            <param name="lpClassName">窗口类名</param>
+            <param name="lpWindowName">窗口标题</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.FindWindowEx(System.IntPtr,System.UInt32,System.String,System.String)">
+            <summary>
+             获取窗口句柄
+            </summary>
+            <param name="hwndParent">父窗口句柄</param>
+            <param name="hwndChildAfter">上一个窗口句柄</param>
+            <param name="lpszClass">窗口类名</param>
+            <param name="lpszWindow">窗口标题</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SendMessage(System.IntPtr,System.UInt32,System.Int32,System.Int32)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="wMsg">消息1</param>
+            <param name="wParam">消息2</param>
+            <param name="lParam">消息值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SendMessageStr(System.IntPtr,System.UInt32,System.Int32,System.String)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="wMsg">消息1</param>
+            <param name="wParam">消息2</param>
+            <param name="lParam">消息值</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SendMessageStrB(System.IntPtr,System.UInt32,System.Int32,System.Text.StringBuilder)">
+            <summary>
+            发送消息
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="wMsg">消息</param>
+            <param name="wParam">消息值1</param>
+            <param name="lParam">消息值2</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SetForegroundWindow(System.IntPtr)">
+            <summary>
+            创建指定窗口的线程设置到前台，并且激活该窗口，对非自身程序无效
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetClassName(System.IntPtr,System.Text.StringBuilder,System.Int32)">
+            <summary>
+            获取窗口类名
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="text">类名返回值</param>
+            <param name="MaxCount">类名最大长度</param>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetWindowText(System.IntPtr,System.Text.StringBuilder,System.Int32)">
+            <summary>
+            获取窗口标题
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="text">标题返回值</param>
+            <param name="MaxLen">标题最大长度</param>
+        </member>
+        <member name="M:WinSystem.Win32Api.ShowWindowAsync(System.IntPtr,System.Int32)">
+            <summary>
+            设置窗口层次
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="cmdShow">层次</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetWindowRect(System.IntPtr,WinSystem.Win32Api.RECT@)">
+            <summary>
+            获取窗口大小
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="lpRect">区域</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.WindowFromPoint(System.Drawing.Point)">
+            <summary>
+            获取指定坐标处窗口句柄
+            </summary>
+            <param name="point">坐标</param>
+            <returns>窗口句柄</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetForegroundWindow">
+            <summary>
+            获取活跃窗口句柄，对非自身程序无效
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetWindowThreadProcessId(System.IntPtr,System.Int32@)">
+            <summary>
+            获取指定窗口线程ID，out进程ID
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="pid">线程ID</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.AttachThreadInput(System.Int32,System.Int32,System.Boolean)">
+            <summary>
+            线程注入、卸载
+            </summary>
+            <param name="idAttach">要注入的线程ID</param>
+            <param name="idAttachTo">当前线程ID</param>
+            <param name="fAttach">行为 true：注入，false：卸载</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetFocus">
+            <summary>
+            获取焦点所在句柄
+            </summary>
+            <returns>窗口句柄</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetDoubleClickTime">
+            <summary>
+            获取系统鼠标双击时间间隔（单位：毫秒）
+            </summary>
+            <returns>鼠标双击时间间隔 毫秒</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetSystemMetrics(System.Int32)">
+            <summary>
+            得到被定义的系统数据或者系统配置信息
+            </summary>
+            <param name="intnIndex">配置编码</param>
+            <returns>配置信息</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.CreateDC(System.String,System.String,System.String,System.IntPtr)">
+            <summary>
+            创建驱动设备环境
+            </summary>
+            <param name="lpszDriver">驱动名</param>
+            <param name="lpszDevice">设备名</param>
+            <param name="lpszOutput">输出</param>
+            <param name="lpInitData">输入</param>
+            <returns>设备上下文环境的句柄</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetWindowDC(System.IntPtr)">
+            <summary>
+            获取窗口的设备环境
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <returns>设备上下文环境的句柄</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.CreateCompatibleDC(System.IntPtr)">
+            <summary>
+            该函数创建一个与指定设备兼容的内存设备上下文环境（DC）
+            </summary>
+            <param name="hdc">设备上下文环境的句柄</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetDC(System.IntPtr)">
+            <summary>
+            检索一指定窗口的客户区域或整个屏幕的显示设备上下文环境的句柄，以后可以在GDI函数中使用该句柄来在设备上下文环境中绘图
+            </summary>
+            <param name="hWnd"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.CreateCompatibleBitmap(System.IntPtr,System.Int32,System.Int32)">
+            <summary>
+            创建与指定的设备环境相关的设备兼容的位图
+            </summary>
+            <param name="hdc">设备上下文环境的句柄</param>
+            <param name="width">图像宽</param>
+            <param name="height">图像高</param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SelectObject(System.IntPtr,System.IntPtr)">
+            <summary>
+            选择一对象到指定的设备上下文环境中
+            </summary>
+            <param name="hdc">设备上下文环境的句柄</param>
+            <param name="hgdiobj">被选择的对象的句柄</param>
+            <returns>如果选择对象不是区域并且函数执行成功，那么返回值是被取代的对象的句柄；如果选择对象是区域并且函数执行成功</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.ReleaseDC(System.IntPtr,System.IntPtr)">
+            <summary>
+            释放设备上下文环境（DC）
+            </summary>
+            <param name="hWnd"></param>
+            <param name="hDC"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.DeleteDC(System.IntPtr)">
+            <summary>
+            删除指定的设备上下文环境
+            </summary>
+            <param name="hdc">设备上下文环境的句柄</param>
+            <returns>成功:非0 失败:0</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.PrintWindow(System.IntPtr,System.IntPtr,System.UInt32)">
+            <summary>
+            截取非屏幕区的窗口
+            </summary>
+            <param name="hwnd">窗口句柄</param>
+            <param name="hdcBlt">被选择的对象的句柄</param>
+            <param name="nFlags">可选标志，指定绘图选项</param>
+            <returns>成功:非0 失败:0</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.DeleteObject(System.IntPtr)">
+            <summary>
+            删除一个逻辑笔、画笔、字体、位图、区域或者调色板，释放所有与该对象有关的系统资源，在对象被删除之后，指定的句柄也就失效了
+            注释：当一个绘画对象（如笔或画笔）当前被选入一个设备上下文环境时不要删除该对象。当一个调色板画笔被删除时，与该画笔相关的位图并不被删除，该图必须单独地删除。
+            </summary>
+            <param name="hObj"></param>
+            <returns>成功，返回非零值；如果指定的句柄无效或者它已被选入设备上下文环境，则返回值为零</returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.UpdateLayeredWindow(System.IntPtr,System.IntPtr,WinSystem.Win32Api.POINT@,WinSystem.Win32Api.Size@,System.IntPtr,WinSystem.Win32Api.POINT@,System.Int32,WinSystem.Win32Api.BLENDFUNCTION@,System.Int32)">
+            <summary>
+            更新一个分层窗口的位置，大小，形状，内容和半透明度
+            </summary>
+            <param name="hwnd"></param>
+            <param name="hdcDst"></param>
+            <param name="pptDst"></param>
+            <param name="psize"></param>
+            <param name="hdcSrc"></param>
+            <param name="pptSrc"></param>
+            <param name="crKey"></param>
+            <param name="pblend"></param>
+            <param name="dwFlags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SetLayeredWindowAttributes(System.IntPtr,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            此函数用于设置分层窗口透明度，常和 UpdateLayeredWindow 函数结合使用。
+            </summary>
+            <param name="hwnd"></param>
+            <param name="crKey"></param>
+            <param name="bAlpha"></param>
+            <param name="dwFlags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.ExtCreateRegion(System.IntPtr,System.UInt32,System.IntPtr)">
+            <summary>
+            根据世界转换修改区域
+            </summary>
+            <param name="lpXform"></param>
+            <param name="nCount"></param>
+            <param name="rgnData"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SetWindowLong(System.IntPtr,System.Int32,System.UInt32)">
+            <summary>
+            改变指定窗口的属性．函数也将指定的一个32位值设置在窗口的额外存储空间的指定偏移位置
+            </summary>
+            <param name="hwnd"></param>
+            <param name="nIndex"></param>
+            <param name="dwNewLong"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetWindowLong(System.IntPtr,System.Int32)">
+            <summary>
+            获得指定窗口的有关信息，函数也获得在额外窗口内存中指定偏移位地址的32位度整型值
+            </summary>
+            <param name="hwnd"></param>
+            <param name="nIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.GetDesktopWindow">
+            <summary>
+            获取桌面句柄
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.SetParent(System.IntPtr,System.IntPtr)">
+            <summary>
+            设置嵌套窗口
+            </summary>
+            <param name="hWndChild"></param>
+            <param name="hWndNewParent"></param>
+            <returns></returns>
+        </member>
+        <member name="T:WinSystem.Win32Api.EnumWindowsCallback">
+            <summary>
+            窗口句柄枚举回调
+            </summary>
+            <param name="hwnd"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="M:WinSystem.Win32Api.EnumWindows(WinSystem.Win32Api.EnumWindowsCallback,System.Int32)">
+            <summary>
+            列举窗口所有句柄
+            </summary>
+            <param name="callPtr"></param>
+            <param name="lParam"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DotNet.Utilities.HttpHelper">
+            <summary>
+            Http连接操作帮助类
+            </summary>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.GetHttpRequestData(DotNet.Utilities.HttpItem)">
+            <summary>
+            根据相传入的数据，得到相应页面数据
+            </summary>
+            <param name="objhttpitem">参数类对象</param>
+            <returns>返回HttpResult类型</returns>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.GetMemoryStream(System.IO.Stream)">
+            <summary>
+            4.0以下.net版本取数据使用
+            </summary>
+            <param name="streamResponse">流</param>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.SetRequest(DotNet.Utilities.HttpItem)">
+             <summary>
+             为请求准备参数
+             </summary>
+            <param name="objhttpItem">参数列表</param>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.SetCer(DotNet.Utilities.HttpItem)">
+            <summary>
+            设置证书
+            </summary>
+            <param name="objhttpItem"></param>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.SetCookie(DotNet.Utilities.HttpItem)">
+            <summary>
+            设置Cookie
+            </summary>
+            <param name="objhttpItem">Http参数</param>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.SetPostData(DotNet.Utilities.HttpItem)">
+            <summary>
+            设置Post数据
+            </summary>
+            <param name="objhttpItem">Http参数</param>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.SetProxy(DotNet.Utilities.HttpItem)">
+            <summary>
+            设置代理
+            </summary>
+            <param name="objhttpItem">参数对象</param>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.CheckValidationResult(System.Object,System.Security.Cryptography.X509Certificates.X509Certificate,System.Security.Cryptography.X509Certificates.X509Chain,System.Net.Security.SslPolicyErrors)">
+            <summary>
+            回调验证证书问题
+            </summary>
+            <param name="sender">流对象</param>
+            <param name="certificate">证书</param>
+            <param name="chain">X509Chain</param>
+            <param name="errors">SslPolicyErrors</param>
+            <returns>bool</returns>
+        </member>
+        <member name="M:DotNet.Utilities.HttpHelper.GetHtml(DotNet.Utilities.HttpItem)">
+            <summary>
+            采用https协议访问网络,根据传入的URl地址，得到响应的数据字符串。
+            </summary>
+            <param name="objhttpItem">参数列表</param>
+            <returns>String类型的数据</returns>
+        </member>
+        <member name="T:DotNet.Utilities.HttpItem">
+            <summary>
+            Http请求参考类
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.URL">
+            <summary>
+            请求URL必须填写
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Method">
+            <summary>
+            请求方式默认为GET方式,当为POST方式时必须设置Postdata的值
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Timeout">
+            <summary>
+            默认请求超时时间
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.ReadWriteTimeout">
+            <summary>
+            默认写入Post数据超时间
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Accept">
+            <summary>
+            请求标头值 默认为text/html, application/xhtml+xml, */*
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.ContentType">
+            <summary>
+            请求返回类型默认 text/html
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.UserAgent">
+            <summary>
+            客户端访问信息默认Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Encoding">
+            <summary>
+            返回数据编码默认为NUll,可以自动识别,一般为utf-8,gbk,gb2312
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.PostDataType">
+            <summary>
+            Post的数据类型
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Postdata">
+            <summary>
+            Post请求时要发送的字符串Post数据
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.PostdataByte">
+            <summary>
+            Post请求时要发送的Byte类型的Post数据
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.CookieCollection">
+            <summary>
+            Cookie对象集合
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Cookie">
+            <summary>
+            请求时的Cookie
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Referer">
+            <summary>
+            来源地址，上次访问地址
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.CerPath">
+            <summary>
+            证书绝对路径
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.IsToLower">
+            <summary>
+            是否设置为全文小写，默认为不转化
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Allowautoredirect">
+            <summary>
+            支持跳转页面，查询结果将是跳转后的页面，默认是不跳转
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Connectionlimit">
+            <summary>
+            最大连接数
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.ProxyUserName">
+            <summary>
+            代理Proxy 服务器用户名
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.ProxyPwd">
+            <summary>
+            代理 服务器密码
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.ProxyIp">
+            <summary>
+            代理 服务IP
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.ResultType">
+            <summary>
+            设置返回类型String和Byte
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpItem.Header">
+            <summary>
+            header对象
+            </summary>
+        </member>
+        <member name="T:DotNet.Utilities.HttpResult">
+            <summary>
+            Http返回参数类
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.Cookie">
+            <summary>
+            Http请求返回的Cookie
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.CookieCollection">
+            <summary>
+            Cookie对象集合
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.Html">
+            <summary>
+            返回的String类型数据 只有ResultType.String时才返回数据，其它情况为空
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.ResultByte">
+            <summary>
+            返回的Byte数组 只有ResultType.Byte时才返回数据，其它情况为空
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.Header">
+            <summary>
+            header对象
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.StatusDescription">
+            <summary>
+            返回状态说明
+            </summary>
+        </member>
+        <member name="P:DotNet.Utilities.HttpResult.StatusCode">
+            <summary>
+            返回状态码,默认为OK
+            </summary>
+        </member>
+        <member name="T:DotNet.Utilities.ResultType">
+            <summary>
+            返回类型
+            </summary>
+        </member>
+        <member name="F:DotNet.Utilities.ResultType.String">
+            <summary>
+            表示只返回字符串 只有Html有数据
+            </summary>
+        </member>
+        <member name="F:DotNet.Utilities.ResultType.Byte">
+            <summary>
+            表示返回字符串和字节流 ResultByte和Html都有数据返回
+            </summary>
+        </member>
+        <member name="T:DotNet.Utilities.PostDataType">
+            <summary>
+            Post的数据格式默认为string
+            </summary>
+        </member>
+        <member name="F:DotNet.Utilities.PostDataType.String">
+            <summary>
+            字符串类型，这时编码Encoding可不设置
+            </summary>
+        </member>
+        <member name="F:DotNet.Utilities.PostDataType.Byte">
+            <summary>
+            Byte类型，需要设置PostdataByte参数的值编码Encoding可设置为空
+            </summary>
+        </member>
+        <member name="F:DotNet.Utilities.PostDataType.FilePath">
+            <summary>
+            传文件，Postdata必须设置为文件的绝对路径，必须设置Encoding的值
+            </summary>
+        </member>
+    </members>
+</doc>
