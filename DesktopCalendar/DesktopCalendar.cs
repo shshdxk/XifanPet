@@ -48,7 +48,10 @@ namespace DesktopCalendar
 
         private void Init()
         {
-
+            // 找到Progman类型的窗口句柄
+            // 调用EnumWindows找到Peogman上面第一层类名为WorkerW的窗口句柄
+            // 将本窗体嵌入这个窗口
+            // https://www.freesion.com/article/2801344904/
             InitializeStylesThrough();
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             IntPtr dWnd = Win32Api.FindWindow("Progman", null);
@@ -78,14 +81,33 @@ namespace DesktopCalendar
                 //    Win32Api.SendMessage(dWnd, 0x052c, 0, 0);
                 //}
             }
-            //pWnd = IntPtr.Zero;
+            pWnd = new IntPtr(0x00060B26);
             Console.WriteLine(Win32Api.GetDesktopWindow());
             SetDesktop(dWnd, this.Handle, pWnd);
             font = ReadFont(40);
 
+            Win32Api.EnumWindowsCallback callBackFn = new Win32Api.EnumWindowsCallback(ReportWindow);
+
+            Win32Api.EnumWindows(callBackFn, 0);
             //bitmapTime = new Bitmap(800, 600);
             //g = Graphics.FromImage(bitmapTime);
             //g.TextRenderingHint = TextRenderingHint.AntiAlias;
+        }
+
+        public static bool ReportWindow(IntPtr hwnd, int lParam)
+        {
+            Console.WriteLine(hwnd + " - " + lParam);
+            //int processId = 0;
+            //int threadId = Win32Api.GetWindowThreadProcessId(hwnd, out processId);
+
+            //if (processId == 23272)  //23272: another program pid
+            //{
+            //    Console.WriteLine(string.Format("Enumerated Window Handle 0x{0:X8}, Process {1}, Thread {2}", hwnd.ToInt32(), processId, threadId));
+
+            //    MoveWindow(hwnd, 100, 100, 800, 600, true);
+            //}
+
+            return true;
         }
 
         private void SetDesktop(IntPtr deskTopPtr, IntPtr child, IntPtr parent)
@@ -183,7 +205,7 @@ namespace DesktopCalendar
         private void DrawCalendar()
         {
             g.Clear(Color.Transparent);
-            g.DrawString("1234567", font, new SolidBrush(Color.Red), 0, 0);
+            g.DrawString("12345678910", font, new SolidBrush(Color.Red), 0, 0);
 
         }
 
