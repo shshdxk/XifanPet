@@ -35,7 +35,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(743, 388);
+            this.ClientSize = new System.Drawing.Size(800, 600);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -44,7 +44,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Clock1";
-            this.Load += new System.EventHandler(this.Clock1_Load);
+            this.Load += new System.EventHandler(this.DesktopCalendar_Load);
             this.ResumeLayout(false);
 
         }

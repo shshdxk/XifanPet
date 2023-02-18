@@ -23,7 +23,9 @@ namespace Clock1
     public partial class Clock1 : Form
     {
         string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        PrivateFontCollection pfc = null;
+        private PrivateFontCollection pfc = null;
+        private SolidBrush textSB = new SolidBrush(Color.Red);
+        private SolidBrush bachgroundTextSB = new SolidBrush(Color.FromArgb(128, 128, 128, 128));
         private Font font = null;
 
         private Timer timer = new Timer();
@@ -160,15 +162,15 @@ namespace Clock1
                 if (through)
                 {
                     g.Clear(Color.Transparent);
-                    g.DrawString(nowStr, font, new SolidBrush(Color.FromArgb(128, 128, 128, 128)), 3, 3);
-                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 1, 1);
+                    g.DrawString(nowStr, font, bachgroundTextSB, 3, 3);
+                    g.DrawString(nowStr, font, textSB, 1, 1);
                     SetBits(bitmapTime);
                 }
                 else
                 {
                     g.Clear(Color.White);
-                    g.DrawString(nowStr, font, new SolidBrush(Color.FromArgb(128, 128, 128, 128)), 3, 3);
-                    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 1, 1);
+                    g.DrawString(nowStr, font, bachgroundTextSB, 3, 3);
+                    g.DrawString(nowStr, font, textSB, 1, 1);
                     gp.DrawImage(bitmapTime, 0, 0);
                 }
             }

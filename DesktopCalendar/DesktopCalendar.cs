@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
@@ -13,32 +14,42 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinSystem;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
+using static WinSystem.Win32Api;
 
 namespace DesktopCalendar
 {
     public partial class DesktopCalendar : Form
     {
         string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        PrivateFontCollection pfc = null;
-        private Font font = null;
+        private string[] weeks = new string[] { "日", "一", "二", "三", "四", "五", "六" };
+        private PrivateFontCollection pfc = null;
+        private SolidBrush backgroundPen = new SolidBrush(Color.FromArgb(80, 240, 240, 240));
+        private SolidBrush backgroundNowPen = new SolidBrush(Color.FromArgb(180, 0, 240, 0));
+        private Font monthFont = null;
+        private SolidBrush montuSB = new SolidBrush(Color.Black);
+        private Font dayFont = null;
+        private SolidBrush day5SB = new SolidBrush(Color.DarkBlue);
+        private SolidBrush day2SB = new SolidBrush(Color.Red);
+        private SolidBrush dayOutSB = new SolidBrush(Color.FromArgb(80, 67, 94, 62));
+        private Font chinaDayFont = null;
+        private SolidBrush chinaDaySB = new SolidBrush(Color.FromArgb(255, 67, 94, 62));
+        private Font weekFont = null;
+        private SolidBrush weekSB = new SolidBrush(Color.DeepSkyBlue);
 
+        private DateTime oldTime = DateTime.Now;
+
+        private IntPtr pWnd = IntPtr.Zero;
         private Timer timer = new Timer();
-        private Boolean through;
         private Bitmap bitmapTime = null;
         private Graphics g;
-        private Graphics gp = null;
-        private Boolean isMove = false;
-        // 鼠标1x坐标
-        private int p1x = 0;
-        // 鼠标1y坐标
-        private int p1y = 0;
-
         private Setting setting = new Setting();
-        Boolean initing = true;
+        private Boolean initing = true;
 
         public DesktopCalendar()
         {
@@ -54,59 +65,32 @@ namespace DesktopCalendar
             // https://www.freesion.com/article/2801344904/
             InitializeStylesThrough();
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+
             IntPtr dWnd = Win32Api.FindWindow("Progman", null);
-            //if (dWnd != IntPtr.Zero)
-            //{
-            //    Win32Api.SendMessage(dWnd, 0x052c, 0, 0);
-            //}
-            IntPtr pWnd = Win32Api.FindWindowEx(dWnd, 0, "SHELLDLL_DefVIew", null);
-            pWnd = Win32Api.FindWindowEx(pWnd, 0, "SysListView32", null);
-            if (pWnd == IntPtr.Zero)
+            if (dWnd != IntPtr.Zero)
             {
-                Boolean first = true;
-                dWnd = IntPtr.Zero;
-                do
+
+                Win32Api.EnumWindowsCallback callBackFn = new Win32Api.EnumWindowsCallback(ReportWindow);
+                Win32Api.EnumWindows(callBackFn, 0);
+                if (pWnd != IntPtr.Zero)
                 {
-                    if (dWnd != IntPtr.Zero && first)
-                    {
-                        first = false;
-                    }
-
-                    dWnd = Win32Api.FindWindowEx(IntPtr.Zero, (uint)dWnd.ToInt64(), "WorkerW", null);
-                    pWnd = Win32Api.FindWindowEx(dWnd, 0, "SHELLDLL_DefVIew", null);
-                    pWnd = Win32Api.FindWindowEx(pWnd, 0, "SysListView32", null);
-                } while (dWnd != IntPtr.Zero && pWnd == IntPtr.Zero);
-                //if (dWnd != IntPtr.Zero)
-                //{
-                //    Win32Api.SendMessage(dWnd, 0x052c, 0, 0);
-                //}
+                    SetDesktop(dWnd, this.Handle, pWnd);
+                    RECT rect = new RECT();
+                    int a = Win32Api.GetWindowRect(pWnd, out rect);
+                    this.Left = rect.right - rect.left - 800;
+                    this.Top = 30;
+                }
             }
-            pWnd = new IntPtr(0x00060B26);
-            Console.WriteLine(Win32Api.GetDesktopWindow());
-            SetDesktop(dWnd, this.Handle, pWnd);
-            font = ReadFont(40);
-
-            Win32Api.EnumWindowsCallback callBackFn = new Win32Api.EnumWindowsCallback(ReportWindow);
-
-            Win32Api.EnumWindows(callBackFn, 0);
-            //bitmapTime = new Bitmap(800, 600);
-            //g = Graphics.FromImage(bitmapTime);
-            //g.TextRenderingHint = TextRenderingHint.AntiAlias;
         }
 
-        public static bool ReportWindow(IntPtr hwnd, int lParam)
+        public bool ReportWindow(IntPtr hwnd, int lParam)
         {
-            Console.WriteLine(hwnd + " - " + lParam);
-            //int processId = 0;
-            //int threadId = Win32Api.GetWindowThreadProcessId(hwnd, out processId);
-
-            //if (processId == 23272)  //23272: another program pid
-            //{
-            //    Console.WriteLine(string.Format("Enumerated Window Handle 0x{0:X8}, Process {1}, Thread {2}", hwnd.ToInt32(), processId, threadId));
-
-            //    MoveWindow(hwnd, 100, 100, 800, 600, true);
-            //}
-
+            StringBuilder sb = new StringBuilder();
+            Win32Api.GetClassName(hwnd, sb, 8);
+            if ("WorkerW".Equals(sb.ToString()))
+            {
+                pWnd = hwnd;
+            }
             return true;
         }
 
@@ -158,57 +142,130 @@ namespace DesktopCalendar
         //            UpdateStyles();
         //        }
 
-        private void Clock1_Load(object sender, EventArgs e)
+        private void DesktopCalendar_Load(object sender, EventArgs e)
         {
-            timer.Interval = 100;
+            pfc = new PrivateFontCollection();
+            byte[] fontBytes = Properties.Resources.LoremIpsum;
+            IntPtr fontData = Marshal.AllocCoTaskMem(fontBytes.Length);
+            Marshal.Copy(fontBytes, 0, fontData, fontBytes.Length);
+            pfc.AddMemoryFont(fontData, fontBytes.Length);
+            Marshal.FreeCoTaskMem(fontData);
+
+            ReadFont();
+            DrawCalendar();
+            timer.Interval = 1000;
             timer.Enabled = true;
             timer.Tick += new EventHandler(timerTick);
         }
 
+        private void ReadFont()
+        {
+            monthFont = new Font("Arial", 40);
+            weekFont = new Font("Arial", 25);
+            dayFont = new Font(pfc.Families[0], 20, FontStyle.Bold);
+            chinaDayFont = new Font("Arial", 10, FontStyle.Bold);
+        }
+
         void timerTick(object sender, EventArgs e)
         {
-            if (font == null)
+            DateTime now = DateTime.Now;
+            if (oldTime.Day != now.Day)
             {
-                return;
-            }
-            try
-            {
-                if (bitmapTime == null)
-                {
-
-                    bitmapTime = new Bitmap(800, 600);
-                    g = Graphics.FromImage(bitmapTime);
-                    g.TextRenderingHint = TextRenderingHint.AntiAlias;
-                }
                 DrawCalendar();
-                SetBits(bitmapTime);
-                //if (through)
-                //{
-                //    g.Clear(Color.Transparent);
-                //    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
-                //    SetBits(bitmapTime);
-                //}
-                //else
-                //{
-                //    g.Clear(Color.White);
-                //    g.DrawString(nowStr, font, new SolidBrush(Color.Red), 0, 0);
-                //    gp.DrawImage(bitmapTime, 0, 0);
-                //}
+                oldTime = now;
             }
-            catch (Exception ignore)
-            {
-                Console.WriteLine(ignore.ToString());
-            }
-
         }
 
         private void DrawCalendar()
         {
+            if (bitmapTime == null)
+            {
+
+                bitmapTime = new Bitmap(800, 600);
+                g = Graphics.FromImage(bitmapTime);
+                g.TextRenderingHint = TextRenderingHint.AntiAlias;
+            }
             g.Clear(Color.Transparent);
-            g.DrawString("12345678910", font, new SolidBrush(Color.Red), 0, 0);
+            DateTime now = DateTime.Now;
+            int nowMonth = now.Month;
+            int nowDay = now.Day;
+            g.DrawString(now.ToString("yyyy年"), monthFont, montuSB, -10, 0);
+            g.DrawString(now.ToString("MM月"), monthFont, montuSB, 420, 0);
+            for (int i = 0; i < 7; i++)
+            {
+                Rectangle rg = new Rectangle(i * 80, 57, 60, 40);
+                using (GraphicsPath gp = CreateRoundedRectanglePath(rg, 3))
+                {
+                    g.FillPath(backgroundPen, gp);
+                }
+                g.DrawString(weeks[i], weekFont, weekSB, i * 80 + 7, 60);
+            }
+            DateTime mFirst = now.AddDays(1 - nowDay);
+            DateTime mLast = now.AddDays(1 - nowDay).AddMonths(1).AddDays(-1);
+            DateTime first = mFirst.AddDays(-((int)mFirst.DayOfWeek));
+            DateTime last = mLast.AddDays(6 - ((int)mLast.DayOfWeek));
+            int count = (int) (last - first).TotalDays + 1;
+            for (int i = 0; i < count; i++)
+            {
+                DateTime time = first.AddDays(i);
+                int line = i / 7;
+                int cell = i % 7;
+                int day = time.Day;
+                int offset = 17;
+                if (day < 10)
+                {
+                    offset = 22;
+                }
+                Rectangle rg = new Rectangle(cell * 80, 110 + line * 60, 60, 50);
+                using (GraphicsPath gp = CreateRoundedRectanglePath(rg, 3))
+                {
+                    if (day == nowDay)
+                    {
+                        g.FillPath(backgroundNowPen, gp);
+                    }
+                    else
+                    {
+                        g.FillPath(backgroundPen, gp);
+                    }
+                }
+                if (nowMonth == time.Month)
+                {
+                    if (cell == 0 || cell == 6)
+                    {
+                        g.DrawString(day + "", dayFont, day2SB, cell * 80 + offset, 110 + line * 60);
+                    }
+                    else
+                    {
+                        g.DrawString(day + "", dayFont, day5SB, cell * 80 + offset, 110 + line * 60);
+                    }
+                    g.DrawString(ChinaDate.GetDay(time), chinaDayFont, chinaDaySB, cell * 80 + 10, 140 + line * 60);
+                }
+                else
+                {
+                    g.DrawString(day + "", dayFont, dayOutSB, cell * 80 + offset, 110 + line * 60);
+                    g.DrawString(ChinaDate.GetDay(time), chinaDayFont, dayOutSB, cell * 80 + 10, 140 + line * 60);
+                }
+            }
+
+
+            SetBits(bitmapTime);
 
         }
 
+        private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int cornerRadius)
+        {
+            GraphicsPath roundedRect = new GraphicsPath();
+            roundedRect.AddArc(rect.X, rect.Y, cornerRadius * 2, cornerRadius * 2, 180, 90);
+            roundedRect.AddLine(rect.X + cornerRadius, rect.Y, rect.Right - cornerRadius * 2, rect.Y);
+            roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y, cornerRadius * 2, cornerRadius * 2, 270, 90);
+            roundedRect.AddLine(rect.Right, rect.Y + cornerRadius * 2, rect.Right, rect.Y + rect.Height - cornerRadius * 2);
+            roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y + rect.Height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
+            roundedRect.AddLine(rect.Right - cornerRadius * 2, rect.Bottom, rect.X + cornerRadius * 2, rect.Bottom);
+            roundedRect.AddArc(rect.X, rect.Bottom - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
+            roundedRect.AddLine(rect.X, rect.Bottom - cornerRadius * 2, rect.X, rect.Y + cornerRadius * 2);
+            roundedRect.CloseFigure();
+            return roundedRect;
+        }
 
         public void SetBits(Bitmap bitmap)
         {
@@ -268,11 +325,6 @@ namespace DesktopCalendar
         //    this.Show();
         //}
 
-        private Font ReadFont(float size)
-        {
-            return new Font("Arial", size);
-        }
-
         private void SaveSetting()
         {
             if (initing)
@@ -289,7 +341,6 @@ namespace DesktopCalendar
                 sw.Write(JsonConvert.SerializeObject(setting));
             }
         }
-
 
     }
 }
