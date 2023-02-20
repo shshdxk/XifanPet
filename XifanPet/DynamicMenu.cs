@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Drawing;
 using Iplugin;
+using Iplugin.Pet;
 
 namespace XifanPet
 {
@@ -194,5 +195,20 @@ namespace XifanPet
         {
             return usedPlugins;
         }
+        public static Dictionary<string, IPetPlug> GetAllPlugins()
+        {
+            return plugins;
+        }
+
+        public static IPetPlug GetPlugin(String name)
+        {
+            IPetPlug plugin;
+            if (plugins.TryGetValue(name, out plugin))
+            {
+                return plugin;
+            }
+            return null;
+        }
+
     }
 }

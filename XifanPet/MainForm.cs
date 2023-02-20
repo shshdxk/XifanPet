@@ -12,11 +12,17 @@ using System.Reflection;
 using Rep;
 using Iplugin.Pet;
 using Iplugin;
+using System.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace XifanPet
 {
     public partial class MainForm : Form
     {
+        private string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private Boolean initing = true;
+        private Setting setting = new Setting();
         IPet pet = null;
         ActionResource actionResource = null;
         Point oldPoint = new Point(0, 0);
@@ -233,6 +239,7 @@ namespace XifanPet
             DynamicMenu.LoadAllPlugs(this.contextMenuStripIcon);
             DynamicPet.LoadAllPets();
             InitPet();
+            InitSetting();
         }
 
         private void InitPet()
@@ -281,28 +288,31 @@ namespace XifanPet
 
         private void 关闭ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            this.Close();
             DynamicMenu.CloseAllPlugins();
             this.Dispose();
         }
 
         private void 穿透ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            穿透ToolStripMenuItem.Checked = true;
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             foreach (IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
             {
                 plugin.MouseThrough();
             }
-            穿透ToolStripMenuItem.Checked = true;
+            SaveSetting();
         }
 
         private void 恢复ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             穿透ToolStripMenuItem.Checked = false;
+            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             foreach (IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
             {
                 plugin.MouseRecover();
             }
+            SaveSetting();
         }
 
         private Life l = null;
@@ -323,9 +333,78 @@ namespace XifanPet
             Console.WriteLine("饱食度：" + l.EatDrink.EatPoint + "，清洁度：" + l.Clean.CleanPoint);
         }
 
-        private void FishForm_FormClosing(object sender, FormClosingEventArgs e)
+        private void InitSetting()
         {
-            
+
+            string settingPath = path + @"\setting.json";
+            if (File.Exists(settingPath))
+            {
+                using (StreamReader sr = new StreamReader(settingPath))
+                {
+                    try
+                    {
+                        setting = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd());
+                        if (setting == null)
+                        {
+                            setting = new Setting();
+                        }
+                        if (setting.Through)
+                        {
+                            穿透ToolStripMenuItem.Checked= true;
+                        }
+                        else
+                        {
+                            穿透ToolStripMenuItem.Checked = false;
+                        }
+                        if (setting.Plugins != null) {
+                            Dictionary<String, IPetPlug> usedPlugins = DynamicMenu.GetUsedPlugins();
+                            foreach (string item in setting.Plugins)
+                            {
+                                if (DynamicMenu.GetAllPlugins().ContainsKey(item))
+                                {
+                                    IPetPlug plugin = DynamicMenu.GetAllPlugins()[item];
+                                    plugin.OpenPlug();
+                                    if (setting.Through)
+                                    {
+                                        plugin.MouseThrough();
+                                    }
+                                    else
+                                    {
+                                        plugin.MouseRecover();
+                                    }
+                                    usedPlugins.Add(item, plugin);
+                                }
+                            }
+                        }
+
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+
+            initing = false;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SaveSetting();
+        }
+
+        private void SaveSetting()
+        {
+            if (initing)
+            {
+                return;
+            }
+            string settingPath = path + @"\setting.json";
+            using (StreamWriter sw = new StreamWriter(settingPath))
+            {
+                setting.Plugins = DynamicMenu.GetUsedPlugins().Keys.ToList();
+                setting.Through = 穿透ToolStripMenuItem.Checked;
+                sw.Write(JsonConvert.SerializeObject(setting));
+            }
         }
     }
 }

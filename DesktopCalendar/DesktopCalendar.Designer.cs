@@ -43,7 +43,7 @@
             this.Name = "DesktopCalendar";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Clock1";
+            this.Text = "DesktopCalender";
             this.Load += new System.EventHandler(this.DesktopCalendar_Load);
             this.ResumeLayout(false);
 
