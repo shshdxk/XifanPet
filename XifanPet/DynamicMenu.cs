@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Drawing;
 using Iplugin;
 using Iplugin.Pet;
+using XifanPet.Properties;
 
 namespace XifanPet
 {
@@ -25,6 +26,10 @@ namespace XifanPet
         /// 使用的插件的集合
         ///</summary>
         private static Dictionary<String, IPetPlug> usedPlugins = new Dictionary<String, IPetPlug>();
+        /// <summary>
+        /// 是否穿透
+        /// </summary>
+        public static Boolean Through = false;
         ///<summary>
         /// 载入所有插件
         ///</summary>
@@ -52,7 +57,7 @@ namespace XifanPet
                         foreach (Type t in types)
                         {
                             //如果某些类实现了预定义的IMsg.IMsgPlug接口，则认为该类适配与主程序(是主程序的插件)
-                            if (t.GetInterface("IPetPlug") != null)
+                            if (t.GetInterface("IPetPlug") != null && ContainsBaseType(t, "PetPlug"))
                             {
                                 if (!plugins.ContainsKey(t.FullName))
                                 {
@@ -70,6 +75,20 @@ namespace XifanPet
                     }
                 }
             }
+        }
+
+        private static Boolean ContainsBaseType(Type o, string baseType)
+        {
+            Type t = o.BaseType;
+            while (t != null)
+            {
+                if (object.Equals(t.Name, baseType))
+                {
+                    return true;
+                }
+                t = t.BaseType;
+            }
+            return false;
         }
         /// <summary>
         /// 动态生成插件菜单
@@ -158,8 +177,7 @@ namespace XifanPet
                 usedPlugins.Add(key, o);
             }
             o.OpenPlug();
-            ToolStripItemCollection item = _contextMenuStrip.Items;
-            if (((ToolStripMenuItem)item.Find("穿透ToolStripMenuItem", false)[0]).Checked)
+            if (Through)
             {
                 o.MouseThrough();
             }
@@ -188,6 +206,36 @@ namespace XifanPet
                 {
                     usedPlugins.Remove(key);
                 }
+            }
+        }
+
+        public static void ClosePlugin(string item)
+        {
+            IPetPlug plugin = DynamicMenu.GetAllPlugins()[item];
+            if (plugin != null)
+            {
+                plugin.Close();
+                usedPlugins.Remove(item);
+            }
+        }
+
+
+        public static void OpenPlugin(string item)
+        {
+
+            IPetPlug plugin = DynamicMenu.GetAllPlugins()[item];
+            if (plugin != null)
+            {
+                plugin.OpenPlug();
+                if (Through)
+                {
+                    plugin.MouseThrough();
+                }
+                else
+                {
+                    plugin.MouseRecover();
+                }
+                usedPlugins.Add(item, plugin);
             }
         }
 

@@ -42,6 +42,7 @@ namespace Clock1
             if (mp != null && !mp.IsDisposed)
             {
                 mp.Close();
+                mp.Dispose();
             }
         }
 

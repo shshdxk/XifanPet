@@ -28,23 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.treeView1 = new System.Windows.Forms.TreeView();
+            this.myTreeView1 = new XifanPet.Control.MyTreeView();
             this.SuspendLayout();
             // 
-            // treeView1
+            // myTreeView1
             // 
-            this.treeView1.CheckBoxes = true;
-            this.treeView1.Location = new System.Drawing.Point(12, 12);
-            this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(330, 269);
-            this.treeView1.TabIndex = 2;
+            this.myTreeView1.CheckBoxes = true;
+            this.myTreeView1.Location = new System.Drawing.Point(12, 12);
+            this.myTreeView1.Name = "myTreeView1";
+            this.myTreeView1.Size = new System.Drawing.Size(323, 426);
+            this.myTreeView1.TabIndex = 3;
+            this.myTreeView1.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.treeView1_AfterCheck);
             // 
             // FormPlugins
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.treeView1);
+            this.ClientSize = new System.Drawing.Size(351, 450);
+            this.Controls.Add(this.myTreeView1);
             this.Name = "FormPlugins";
             this.Text = "FormPlugins";
             this.Load += new System.EventHandler(this.FormPlugins_Load);
@@ -53,7 +54,6 @@
         }
 
         #endregion
-
-        private System.Windows.Forms.TreeView treeView1;
+        private Control.MyTreeView myTreeView1;
     }
 }

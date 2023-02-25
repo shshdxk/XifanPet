@@ -55,6 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Control\MyTreeView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Control\MyTreeView.Designer.cs">
+      <DependentUpon>MyTreeView.cs</DependentUpon>
+    </Compile>
     <Compile Include="DynamicPet.cs" />
     <Compile Include="DynamicMenu.cs" />
     <Compile Include="FormPlugins.cs">
@@ -118,5 +124,6 @@
   <ItemGroup>
     <Content Include="猪猪1.ico" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

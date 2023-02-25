@@ -295,6 +295,7 @@ namespace XifanPet
 
         private void 穿透ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            DynamicMenu.Through = true;
             穿透ToolStripMenuItem.Checked = true;
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             foreach (IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
@@ -306,6 +307,7 @@ namespace XifanPet
 
         private void 恢复ToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            DynamicMenu.Through = false;
             穿透ToolStripMenuItem.Checked = false;
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             foreach (IPetPlug plugin in DynamicMenu.GetUsedPlugins().Values)
@@ -348,6 +350,7 @@ namespace XifanPet
                         {
                             setting = new Setting();
                         }
+                        DynamicMenu.Through = setting.Through;
                         if (setting.Through)
                         {
                             穿透ToolStripMenuItem.Checked= true;
@@ -357,22 +360,11 @@ namespace XifanPet
                             穿透ToolStripMenuItem.Checked = false;
                         }
                         if (setting.Plugins != null) {
-                            Dictionary<String, IPetPlug> usedPlugins = DynamicMenu.GetUsedPlugins();
                             foreach (string item in setting.Plugins)
                             {
                                 if (DynamicMenu.GetAllPlugins().ContainsKey(item))
                                 {
-                                    IPetPlug plugin = DynamicMenu.GetAllPlugins()[item];
-                                    plugin.OpenPlug();
-                                    if (setting.Through)
-                                    {
-                                        plugin.MouseThrough();
-                                    }
-                                    else
-                                    {
-                                        plugin.MouseRecover();
-                                    }
-                                    usedPlugins.Add(item, plugin);
+                                    DynamicMenu.OpenPlugin(item);
                                 }
                             }
                         }
