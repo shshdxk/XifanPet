@@ -48,6 +48,7 @@
             this.Controls.Add(this.myTreeView1);
             this.Name = "FormPlugins";
             this.Text = "FormPlugins";
+            this.Activated += new System.EventHandler(this.FormPlugins_Activated);
             this.Load += new System.EventHandler(this.FormPlugins_Load);
             this.ResumeLayout(false);
 

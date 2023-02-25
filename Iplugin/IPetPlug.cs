@@ -32,5 +32,11 @@ namespace Iplugin
         /// 关闭时调用
         /// </summary>
         void Close();
+
+        /// <summary>
+        /// 插件关闭回调
+        /// </summary>
+        /// <param name="callback"></param>
+        void Closed(PetPlug.ClosedCallback callback);
     }
 }

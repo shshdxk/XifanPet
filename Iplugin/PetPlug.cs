@@ -21,5 +21,12 @@ namespace Iplugin
 
         }
 
+        public virtual void Closed(ClosedCallback callback)
+        {
+        }
+
+        public delegate void ClosedCallback(IPetPlug plug);
+
+
     }
 }

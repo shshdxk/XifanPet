@@ -23,6 +23,11 @@ namespace XifanPet
 
         private void FormPlugins_Load(object sender, EventArgs e)
         {
+            InitViewTree();
+        }
+
+        private void InitViewTree()
+        {
             Dictionary<string, IPetPlug> pluginsDict = DynamicMenu.GetAllPlugins();
             Dictionary<string, IPetPlug> usedPluginsDict = DynamicMenu.GetUsedPlugins();
             TreeNode root = new TreeNode();
@@ -56,14 +61,13 @@ namespace XifanPet
             }
             root.ExpandAll();
 
-            Console.WriteLine(JsonConvert.SerializeObject(root));
+
             myTreeView1.Nodes.Clear();
             myTreeView1.Nodes.Add(root);
         }
 
         private void InsertPlugin(TreeNodeCollection nodes, TreeNode node, int index)
         {
-            // TODO
             nodes.Add(node);
         }
 
@@ -130,7 +134,10 @@ namespace XifanPet
             }
         }
 
-
+        private void FormPlugins_Activated(object sender, EventArgs e)
+        {
+            InitViewTree();
+        }
     }
 
 

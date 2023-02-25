@@ -71,7 +71,6 @@ namespace DesktopCalendar
 
                 Win32Api.EnumWindowsCallback callBackFn = new Win32Api.EnumWindowsCallback(ReportWindow);
                 Win32Api.EnumWindows(callBackFn, 0);
-                Console.WriteLine("pWnd: " + pWnd);
                 if (pWnd != IntPtr.Zero)
                 {
                     SetDesktop(dWnd, this.Handle, pWnd);

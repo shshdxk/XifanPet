@@ -7,6 +7,7 @@ namespace FileDescription
 {
     public class FileDescriptionStart : PetPlug
     {
+        private ClosedCallback callback = null;
         private Form1 mp = null;
         private Menu[] menus = { };
         /// <summary>
@@ -22,7 +23,7 @@ namespace FileDescription
         {
             if (mp == null || mp.IsDisposed)
             {
-                mp = new Form1();
+                mp = new Form1(callback, this);
             }
             mp.Show();
         }
@@ -45,6 +46,10 @@ namespace FileDescription
             }
         }
 
-        
+        public override void Closed(ClosedCallback callback)
+        {
+            this.callback = callback;
+        }
+
     }
 }

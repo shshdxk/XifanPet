@@ -64,6 +64,7 @@ namespace XifanPet
                                     IPetPlug selObj = (IPetPlug)ab.CreateInstance(t.FullName);
                                     plugins.Add(t.FullName, selObj);
                                     selObj.Initialization();
+                                    selObj.Closed(new PetPlug.ClosedCallback(ClosedCallback));
                                     SetMenu(selObj.GetMenu(), selObj);
                                 }
                             }
@@ -200,12 +201,12 @@ namespace XifanPet
         {
             if (o != null)
             {
-                o.Close();
                 string key = o.GetType().FullName;
                 if (usedPlugins.ContainsKey(key))
                 {
                     usedPlugins.Remove(key);
                 }
+                o.Close();
             }
         }
 
@@ -214,8 +215,8 @@ namespace XifanPet
             IPetPlug plugin = DynamicMenu.GetAllPlugins()[item];
             if (plugin != null)
             {
-                plugin.Close();
                 usedPlugins.Remove(item);
+                plugin.Close();
             }
         }
 
@@ -236,6 +237,15 @@ namespace XifanPet
                     plugin.MouseRecover();
                 }
                 usedPlugins.Add(item, plugin);
+            }
+        }
+
+        public static void ClosedCallback(IPetPlug plug)
+        {
+            string key = plug.GetType().FullName;
+            if (usedPlugins.ContainsKey(key))
+            {
+                usedPlugins.Remove(key);
             }
         }
 
