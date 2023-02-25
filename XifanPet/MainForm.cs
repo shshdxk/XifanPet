@@ -350,32 +350,34 @@ namespace XifanPet
                         {
                             setting = new Setting();
                         }
-                        DynamicMenu.Through = setting.Through;
-                        if (setting.Through)
-                        {
-                            穿透ToolStripMenuItem.Checked= true;
-                        }
-                        else
-                        {
-                            穿透ToolStripMenuItem.Checked = false;
-                        }
-                        if (setting.Plugins != null) {
-                            foreach (string item in setting.Plugins)
-                            {
-                                if (DynamicMenu.GetAllPlugins().ContainsKey(item))
-                                {
-                                    DynamicMenu.OpenPlugin(item);
-                                }
-                            }
-                        }
-
                     }
                     catch
                     {
                     }
                 }
+            } else {
+                setting = new Setting();
             }
 
+            DynamicMenu.Through = setting.Through;
+            if (setting.Through)
+            {
+                穿透ToolStripMenuItem.Checked = true;
+            }
+            else
+            {
+                穿透ToolStripMenuItem.Checked = false;
+            }
+            if (setting.Plugins != null)
+            {
+                foreach (string item in setting.Plugins)
+                {
+                    if (DynamicMenu.GetAllPlugins().ContainsKey(item))
+                    {
+                        DynamicMenu.OpenPlugin(item);
+                    }
+                }
+            }
             initing = false;
         }
 
