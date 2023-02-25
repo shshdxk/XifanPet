@@ -1,6 +1,4 @@
-﻿using Clock1.Properties;
-using Iplugin.Pet;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,8 +17,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using WinSystem;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
-using static WinSystem.Win32Api;
 
 namespace DesktopCalendar
 {
@@ -54,10 +50,13 @@ namespace DesktopCalendar
         public DesktopCalendar()
         {
             InitializeComponent();
-            Init();
+            if (!Init())
+            {
+                Init();
+            }
         }
 
-        private void Init()
+        private Boolean Init()
         {
             // 找到Progman类型的窗口句柄
             // 调用EnumWindows找到Peogman上面第一层类名为WorkerW的窗口句柄
@@ -72,24 +71,43 @@ namespace DesktopCalendar
 
                 Win32Api.EnumWindowsCallback callBackFn = new Win32Api.EnumWindowsCallback(ReportWindow);
                 Win32Api.EnumWindows(callBackFn, 0);
+                Console.WriteLine("pWnd: " + pWnd);
                 if (pWnd != IntPtr.Zero)
                 {
                     SetDesktop(dWnd, this.Handle, pWnd);
-                    RECT rect = new RECT();
+                    Win32Api.RECT rect = new Win32Api.RECT();
                     int a = Win32Api.GetWindowRect(pWnd, out rect);
                     this.Left = rect.right - rect.left - 800;
                     this.Top = 30;
+                    return true;
+                }
+                else
+                {
+                    SetDesktop(dWnd, this.Handle, dWnd);
+                    return false;
                 }
             }
+            return false;
         }
 
+        private int p1 = 0;
+        private int p2 = 0;
         public bool ReportWindow(IntPtr hwnd, int lParam)
         {
+            p1++;
             StringBuilder sb = new StringBuilder();
             Win32Api.GetClassName(hwnd, sb, 8);
             if ("WorkerW".Equals(sb.ToString()))
             {
                 pWnd = hwnd;
+                p2 = p1;
+            }
+            if ("Progman".Equals(sb.ToString()))
+            {
+                if (p1 != p2 + 1)
+                {
+                    pWnd = IntPtr.Zero;
+                }
             }
             return true;
         }

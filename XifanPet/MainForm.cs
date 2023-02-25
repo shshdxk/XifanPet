@@ -392,6 +392,12 @@ namespace XifanPet
             SaveSetting();
         }
 
+        private void pluginsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormPlugins formPlugins = new FormPlugins();
+            formPlugins.ShowDialog();
+        }
+
         private void SaveSetting()
         {
             if (initing)

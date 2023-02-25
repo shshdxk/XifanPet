@@ -31,6 +31,6 @@ namespace Iplugin
         /// <summary>
         /// 关闭时调用
         /// </summary>
-         void Close();
+        void Close();
     }
 }
