@@ -236,7 +236,7 @@ namespace DesktopCalendar
                 Rectangle rg = new Rectangle(cell * 80, 110 + line * 60, 60, 50);
                 using (GraphicsPath gp = CreateRoundedRectanglePath(rg, 3))
                 {
-                    if (day == nowDay)
+                    if (day == nowDay && nowMonth == time.Month)
                     {
                         g.FillPath(backgroundNowPen, gp);
                     }
