@@ -159,7 +159,7 @@ namespace XifanPet
                 }
                 if (insertIndex == item.Count)
                 {
-                    item.Insert(item.Count - 1, menu);
+                    item.Insert(item.Count, menu);
                 }
             }
         }

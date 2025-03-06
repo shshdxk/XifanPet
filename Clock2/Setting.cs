@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PetCommon
+namespace Clock2
 {
-    public class Class1
+    internal class Setting
     {
+        public int Top { get; set; }
+        public int Left { get; set; }
+
     }
 }

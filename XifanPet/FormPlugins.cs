@@ -33,28 +33,37 @@ namespace XifanPet
             TreeNode root = new TreeNode();
             root.Text = "插件";
             root.Checked = true;
-            foreach (KeyValuePair<string, IPetPlug> kv in pluginsDict)
+
+            List<string> keys = pluginsDict.Keys.ToList();
+            keys.Sort((a1, a2) => {
+                IPetPlug p1 = pluginsDict[a1];
+                IPetPlug p2 = pluginsDict[a2];
+                return p1.GetMenu()[0].Index - p2.GetMenu()[0].Index;
+            });
+
+            foreach (string key in keys)
             {
-                IPetPlug plug = kv.Value;
+                IPetPlug plug = pluginsDict[key];
                 TreeNodeCollection nodes = root.Nodes;
                 foreach (Iplugin.Menu menu in plug.GetMenu())
                 {
                     TreeNode node;
                     string name = menu.MenuName;
-                    if (nodes.ContainsKey(name))
+                    TreeNode ch = CheckChildNodesText(nodes, name);
+                    if (ch != null)
                     {
-                        node = nodes.Find(name, false)[0];
+                        node = ch;
                     }
                     else
                     {
                         node = new TreeNode(name);
                         node.Text = name;
-                        node.Tag = kv.Key;
-                        if (usedPluginsDict.ContainsKey(kv.Key))
-                        {
-                            node.Checked = true;
-                        }
+                        node.Tag = key;
                         InsertPlugin(nodes, node, menu.Index);
+                    }
+                    if (usedPluginsDict.ContainsKey(key))
+                    {
+                        node.Checked = true;
                     }
                     nodes = node.Nodes;
                 }
@@ -64,6 +73,21 @@ namespace XifanPet
 
             myTreeView1.Nodes.Clear();
             myTreeView1.Nodes.Add(root);
+        }
+        private TreeNode CheckChildNodesText(TreeNodeCollection parentNode, string text)
+        {
+            if (parentNode.Count == 0)
+            {
+                return null;
+            }
+            foreach (TreeNode childNode in parentNode)
+            {
+                if (object.Equals(text, childNode.Text))
+                {
+                    return childNode;
+                }
+            }
+            return null;
         }
 
         private void InsertPlugin(TreeNodeCollection nodes, TreeNode node, int index)

@@ -41,6 +41,7 @@ namespace Clock1
 
         private Setting setting = new Setting();
         Boolean initing = true;
+        private String time = null;
 
         public Clock1()
         {
@@ -152,6 +153,10 @@ namespace Clock1
             {
                 DateTime now = DateTime.Now;
                 String nowStr = now.ToString("HH:mm:ss");
+                if (time == nowStr) {
+                    return;
+                }
+                time = nowStr;
                 if (bitmapTime == null)
                 {
                     bitmapTime = new Bitmap(this.Width, this.Height);

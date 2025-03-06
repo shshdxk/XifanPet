@@ -36,10 +36,10 @@
             this.显示ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.穿透ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.恢复ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.吃ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.洗ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关闭ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStripIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -96,6 +96,13 @@
             this.恢复ToolStripMenuItem.Text = "恢复";
             this.恢复ToolStripMenuItem.Click += new System.EventHandler(this.恢复ToolStripMenuItem_Click);
             // 
+            // pluginsToolStripMenuItem
+            // 
+            this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.pluginsToolStripMenuItem.Text = "插件";
+            this.pluginsToolStripMenuItem.Click += new System.EventHandler(this.pluginsToolStripMenuItem_Click);
+            // 
             // 吃ToolStripMenuItem
             // 
             this.吃ToolStripMenuItem.Name = "吃ToolStripMenuItem";
@@ -112,17 +119,11 @@
             // 
             // 关闭ToolStripMenuItem
             // 
+            this.关闭ToolStripMenuItem.MergeIndex = 999999;
             this.关闭ToolStripMenuItem.Name = "关闭ToolStripMenuItem";
             this.关闭ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.关闭ToolStripMenuItem.Text = "退出";
             this.关闭ToolStripMenuItem.Click += new System.EventHandler(this.关闭ToolStripMenuItem_Click);
-            // 
-            // pluginsToolStripMenuItem
-            // 
-            this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
-            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.pluginsToolStripMenuItem.Text = "插件";
-            this.pluginsToolStripMenuItem.Click += new System.EventHandler(this.pluginsToolStripMenuItem_Click);
             // 
             // MainForm
             // 
