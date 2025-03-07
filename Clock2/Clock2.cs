@@ -25,9 +25,10 @@ namespace Clock2
         string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private PrivateFontCollection pfc = null;
         private Font font = null;
-        private String time = null;
-        private SolidBrush textSB = new SolidBrush(Color.Red);
-        private SolidBrush bachgroundTextSB = new SolidBrush(Color.FromArgb(128, 128, 128, 128));
+        private string time = null;
+        private SolidBrush textSB = new SolidBrush(Color.White);
+        private string[] weeks = new string[] { "日", "一", "二", "三", "四", "五", "六" };
+        private Bitmap backend = null;
 
         private Timer timer = new Timer();
         private Bitmap bitmapTime = null;
@@ -39,6 +40,21 @@ namespace Clock2
         private int p1x = 0;
         // 鼠标1y坐标
         private int p1y = 0;
+        // 颜色定义
+        Color bgColor = Color.FromArgb(88, 101, 242);  // 紫色背景
+        Color clockColor = Color.Black;  // 黑色表盘
+        Color textColor = Color.White;  // 白色文本
+        private SolidBrush highlightColor = new SolidBrush(Color.DeepSkyBlue); // 蓝色刻度
+        private SolidBrush circleAccent = new SolidBrush(Color.Fuchsia); // 粉色圆形
+        // 分针
+        private Pen handPenm = new Pen(Color.White, 2);
+        // 秒针
+        private Pen handPens = new Pen(Color.White, 1.5f);
+        // 时针
+        private Font hourFont = new Font("Arial", 10, FontStyle.Bold);
+        private SolidBrush textColorB = new SolidBrush(Color.White); // 蓝色刻度
+        // 日期
+        private Font dayFont = new Font("Arial", 12);
 
         public Clock2()
         {
@@ -144,6 +160,11 @@ namespace Clock2
             {
                 return;
             }
+            if (backend == null)
+            {
+                backend = new Bitmap(400, 200);
+                DrawClockBack();
+            }
             try
             {
                 DateTime now = DateTime.Now;
@@ -160,10 +181,8 @@ namespace Clock2
                     g.TextRenderingHint = TextRenderingHint.AntiAlias;
                 }
                 g.Clear(Color.Transparent);
-                g.DrawString(nowStr, font, bachgroundTextSB, 3, 3);
-                g.DrawString(nowStr, font, textSB, 1, 1);
-
-                DrawClock(g);
+                g.DrawImage(backend, 0, 0);
+                DrawClock(g, now);
                 SetBits(bitmapTime);
             }
             catch (Exception ignore)
@@ -172,24 +191,82 @@ namespace Clock2
             }
         }
 
-        private void DrawClock(Graphics g)
+        private void DrawClock(Graphics g, DateTime date)
         {
+            DateTime now = date;
+            string nowStr = now.ToString("HH:mm:ss");
 
+            g.DrawString(nowStr, font, textSB, 170, 70);
+
+            string d = now.ToString("yyyy-MM-dd 星期") + weeks[(int)now.DayOfWeek];
+            g.DrawString(d, dayFont, textSB, 200, 125);
+
+            // 绘制黑色表盘
+            int centerX = 94, centerY = 81, radius = 68;
+
+            int hour = now.Hour;
+            int minute = now.Minute;
+            int second = now.Second;
+
+            double angleHour = (hour % 12 + minute / 60.0) * 30 * Math.PI / 180;
+            double angleMinute = (minute + second / 60.0) * 6 * Math.PI / 180;
+            double angleSecond = second * 6 * Math.PI / 180;
+            double length = radius * 0.8;
+
+            // 绘制时针
+            double hx = centerX + radius * 0.6 * Math.Sin(angleHour);
+            double hy = centerY - radius * 0.6 * Math.Cos(angleHour);
+            float dx = hour > 9 ? 10f : 5f;
+            g.FillEllipse(circleAccent, (float)(hx - 12), (float)(hy - 12), 24, 24);
+            g.DrawString(hour + "", hourFont, textColorB, (float)(hx - dx), (float)(hy - 6.6666f));
+
+
+            // 绘制分针
+            double mx1 = centerX - radius * 0.1 * Math.Sin(angleMinute);
+            double my1 = centerY + radius * 0.1 * Math.Cos(angleMinute);
+            double mx2 = centerX + radius * 0.7 * Math.Sin(angleMinute);
+            double my2 = centerY - radius * 0.7 * Math.Cos(angleMinute);
+            g.DrawLine(handPenm, (float)mx1, (float)my1, (float)mx2, (float)my2);
+
+            // 绘制秒针
+            double sx1 = centerX - radius * 0.1 * Math.Sin(angleSecond);
+            double sy1 = centerY + radius * 0.1 * Math.Cos(angleSecond);
+            double sx2 = centerX + length * Math.Sin(angleSecond);
+            double sy2 = centerY - length * Math.Cos(angleSecond);
+            g.DrawLine(handPens, (float)sx1, (float)sy1, (float)sx2, (float)sy2);
+            g.FillEllipse(highlightColor, centerX - 3, centerY - 3, 6, 6);
         }
 
-        private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int cornerRadius)
+        /// <summary>
+        /// 绘制背景
+        /// </summary>
+        private void DrawClockBack()
         {
-            GraphicsPath roundedRect = new GraphicsPath();
-            roundedRect.AddArc(rect.X, rect.Y, cornerRadius * 2, cornerRadius * 2, 180, 90);
-            roundedRect.AddLine(rect.X + cornerRadius, rect.Y, rect.Right - cornerRadius * 2, rect.Y);
-            roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y, cornerRadius * 2, cornerRadius * 2, 270, 90);
-            roundedRect.AddLine(rect.Right, rect.Y + cornerRadius * 2, rect.Right, rect.Y + rect.Height - cornerRadius * 2);
-            roundedRect.AddArc(rect.X + rect.Width - cornerRadius * 2, rect.Y + rect.Height - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 0, 90);
-            roundedRect.AddLine(rect.Right - cornerRadius * 2, rect.Bottom, rect.X + cornerRadius * 2, rect.Bottom);
-            roundedRect.AddArc(rect.X, rect.Bottom - cornerRadius * 2, cornerRadius * 2, cornerRadius * 2, 90, 90);
-            roundedRect.AddLine(rect.X, rect.Bottom - cornerRadius * 2, rect.X, rect.Y + cornerRadius * 2);
-            roundedRect.CloseFigure();
-            return roundedRect;
+            Graphics g = Graphics.FromImage(backend);
+            g.TextRenderingHint = TextRenderingHint.AntiAlias;
+            // 绘制背景框
+            Rectangle bgRect = new Rectangle(8, 50, 390, 120);
+            g.DrawRoundedRectanglePath(new SolidBrush(bgColor), bgRect, 10);
+
+            // 绘制黑色表盘
+            int centerX = 94, centerY = 81, radius = 68;
+            g.FillEllipse(new SolidBrush(clockColor), centerX - radius, centerY - radius, radius * 2, radius * 2);
+
+            // 绘制刻度（60 个短刻度）
+            for (int i = 0; i < 60; i++)
+            {
+                double angle = i * 6 * Math.PI / 180;
+                double length1 = i % 5 == 0 ? 0.86 : 0.93;
+                double length2 = i % 5 == 0 ? 1.05 : 1;
+                int x1 = centerX + (int)(radius * length1 * Math.Cos(angle));
+                int y1 = centerY + (int)(radius * length1 * Math.Sin(angle));
+                int x2 = centerX + (int)(radius * length2 * Math.Cos(angle));
+                int y2 = centerY + (int)(radius * length2 * Math.Sin(angle));
+
+                Pen tickPen = i % 5 == 0 ? new Pen(textColor, 2) : new Pen(textColor, 1);
+                g.DrawLine(tickPen, x1, y1, x2, y2);
+            }
+
         }
 
         public void SetBits(Bitmap bitmap)
