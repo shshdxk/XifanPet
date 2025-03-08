@@ -219,9 +219,7 @@ namespace DesktopCalendar
                 }
             }
 
-
-            SetBits(bitmapTime);
-
+            Common.SetBits(Handle, bitmapTime, Left, Top);
         }
 
         private GraphicsPath CreateRoundedRectanglePath(Rectangle rect, int cornerRadius)
@@ -237,46 +235,6 @@ namespace DesktopCalendar
             roundedRect.AddLine(rect.X, rect.Bottom - cornerRadius * 2, rect.X, rect.Y + cornerRadius * 2);
             roundedRect.CloseFigure();
             return roundedRect;
-        }
-
-        public void SetBits(Bitmap bitmap)
-        {
-            IntPtr oldBits = IntPtr.Zero;
-            IntPtr screenDC = Win32Api.GetDC(IntPtr.Zero);
-            IntPtr hBitmap = IntPtr.Zero;
-            IntPtr memDc = Win32Api.CreateCompatibleDC(screenDC);
-
-            try
-            {
-                Win32Api.POINT topLoc = new Win32Api.POINT(Left, Top);
-                Win32Api.Size bitMapSize = new Win32Api.Size(this.Width, this.Height);
-                Win32Api.BLENDFUNCTION blendFunc = new Win32Api.BLENDFUNCTION();
-                Win32Api.POINT srcLoc = new Win32Api.POINT(0, 0);
-
-                hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
-                oldBits = Win32Api.SelectObject(memDc, hBitmap);
-
-                blendFunc.BlendOp = Win32Api.AC_SRC_OVER;
-                blendFunc.SourceConstantAlpha = 255;
-                blendFunc.AlphaFormat = Win32Api.AC_SRC_ALPHA;
-                blendFunc.BlendFlags = 0;
-                Win32Api.UpdateLayeredWindow(Handle, screenDC, ref topLoc, ref bitMapSize, memDc, ref srcLoc, 0, ref blendFunc, Win32Api.ULW_ALPHA);
-
-            }
-            catch (ObjectDisposedException ignore)
-            {
-                Console.WriteLine(ignore.ToString());
-            }
-            finally
-            {
-                if (hBitmap != IntPtr.Zero)
-                {
-                    Win32Api.SelectObject(memDc, oldBits);
-                    Win32Api.DeleteObject(hBitmap);
-                }
-                Win32Api.ReleaseDC(IntPtr.Zero, screenDC);
-                Win32Api.DeleteDC(memDc);
-            }
         }
 
         //public void MouseThrough()

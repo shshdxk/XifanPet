@@ -15,14 +15,13 @@ using Iplugin;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PetCommon;
 
 namespace XifanPet
 {
     public partial class MainForm : Form
     {
         private string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        private Boolean initing = true;
-        private Setting setting = new Setting();
         IPet pet = null;
         ActionResource actionResource = null;
         Point oldPoint = new Point(0, 0);
@@ -187,46 +186,7 @@ namespace XifanPet
         public void SetBits(Bitmap bitmap)
         {
             if (!haveHandle) return;
-
-            //if (!Bitmap.IsCanonicalPixelFormat(bitmap.PixelFormat) || !Bitmap.IsAlphaPixelFormat(bitmap.PixelFormat))
-            //    throw new ApplicationException("图片必须是32位带Alhpa通道的图片。");
-
-            IntPtr oldBits = IntPtr.Zero;
-            IntPtr screenDC = Win32Api.GetDC(IntPtr.Zero);
-            IntPtr hBitmap = IntPtr.Zero;
-            IntPtr memDc = Win32Api.CreateCompatibleDC(screenDC);
-
-            try
-            {
-                Win32Api.POINT topLoc = new Win32Api.POINT(Left, Top);
-                Win32Api.Size bitMapSize = new Win32Api.Size(bitmap.Width, bitmap.Height);
-                Win32Api.BLENDFUNCTION blendFunc = new Win32Api.BLENDFUNCTION();
-                Win32Api.POINT srcLoc = new Win32Api.POINT(0, 0);
-
-                hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
-                oldBits = Win32Api.SelectObject(memDc, hBitmap);
-
-                blendFunc.BlendOp = Win32Api.AC_SRC_OVER;
-                blendFunc.SourceConstantAlpha = 255;
-                blendFunc.AlphaFormat = Win32Api.AC_SRC_ALPHA;
-                blendFunc.BlendFlags = 0;
-                Win32Api.UpdateLayeredWindow(Handle, screenDC, ref topLoc, ref bitMapSize, memDc, ref srcLoc, 0, ref blendFunc, Win32Api.ULW_ALPHA);
-
-            }
-            catch (ObjectDisposedException ignore)
-            {
-                Console.WriteLine(ignore.ToString());
-            }
-            finally
-            {
-                if (hBitmap != IntPtr.Zero)
-                {
-                    Win32Api.SelectObject(memDc, oldBits);
-                    Win32Api.DeleteObject(hBitmap);
-                }
-                Win32Api.ReleaseDC(IntPtr.Zero, screenDC);
-                Win32Api.DeleteDC(memDc);
-            }
+            Common.SetBits(Handle, bitmap, Left, Top);
         }
 
         private void FishForm_Load(object sender, EventArgs e)
@@ -302,7 +262,7 @@ namespace XifanPet
             {
                 plugin.MouseThrough();
             }
-            SaveSetting();
+            SettingManager.SaveSetting(true);
         }
 
         private void 恢复ToolStripMenuItem_Click(object sender, EventArgs e)
@@ -314,7 +274,7 @@ namespace XifanPet
             {
                 plugin.MouseRecover();
             }
-            SaveSetting();
+            SettingManager.SaveSetting(false);
         }
 
         private Life l = null;
@@ -337,28 +297,7 @@ namespace XifanPet
 
         private void InitSetting()
         {
-
-            string settingPath = path + @"\setting.json";
-            if (File.Exists(settingPath))
-            {
-                using (StreamReader sr = new StreamReader(settingPath))
-                {
-                    try
-                    {
-                        setting = JsonConvert.DeserializeObject<Setting>(sr.ReadToEnd());
-                        if (setting == null)
-                        {
-                            setting = new Setting();
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            } else {
-                setting = new Setting();
-            }
-
+            Setting setting = SettingManager.ReadSetting();
             DynamicMenu.Through = setting.Through;
             if (setting.Through)
             {
@@ -378,12 +317,12 @@ namespace XifanPet
                     }
                 }
             }
-            initing = false;
+            SettingManager.initing = false;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SaveSetting();
+            SettingManager.SaveSetting(null);
         }
 
         private void pluginsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -392,19 +331,5 @@ namespace XifanPet
             formPlugins.ShowDialog();
         }
 
-        private void SaveSetting()
-        {
-            if (initing)
-            {
-                return;
-            }
-            string settingPath = path + @"\setting.json";
-            using (StreamWriter sw = new StreamWriter(settingPath))
-            {
-                setting.Plugins = DynamicMenu.GetUsedPlugins().Keys.ToList();
-                setting.Through = 穿透ToolStripMenuItem.Checked;
-                sw.Write(JsonConvert.SerializeObject(setting));
-            }
-        }
     }
 }

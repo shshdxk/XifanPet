@@ -112,6 +112,7 @@ namespace XifanPet
                 node.Checked = true;
             }
             selectNode(node.Parent);
+            SettingManager.SaveSetting(null);
         }
 
         private void unSelectNode(TreeNode node)
@@ -133,8 +134,8 @@ namespace XifanPet
             foreach (TreeNode child in node.Nodes)
             {
                 unSelectNode(child);
-
             }
+            SettingManager.SaveSetting(null);
         }
 
         private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)

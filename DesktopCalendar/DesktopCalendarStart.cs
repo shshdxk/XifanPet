@@ -5,7 +5,7 @@ using Iplugin;
 
 namespace DesktopCalendar
 {
-    public class Clock1Start : PetPlug
+    public class DesktopCalendarStart : PetPlug
     {
         private DesktopCalendar mp = null;
         private Menu[] menus = { };
@@ -42,6 +42,7 @@ namespace DesktopCalendar
             if (mp != null && !mp.IsDisposed)
             {
                 mp.Close();
+                mp.Dispose();
             }
         }
 

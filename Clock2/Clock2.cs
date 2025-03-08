@@ -183,7 +183,7 @@ namespace Clock2
                 g.Clear(Color.Transparent);
                 g.DrawImage(backend, 0, 0);
                 DrawClock(g, now);
-                SetBits(bitmapTime);
+                Common.SetBits(Handle, bitmapTime, Left, Top);
             }
             catch (Exception ignore)
             {
@@ -216,6 +216,7 @@ namespace Clock2
             // 绘制时针
             double hx = centerX + radius * 0.6 * Math.Sin(angleHour);
             double hy = centerY - radius * 0.6 * Math.Cos(angleHour);
+            g.DrawLine(handPenm, centerX, centerY, (float)hx, (float)hy);
             float dx = hour > 9 ? 10f : 5f;
             g.FillEllipse(circleAccent, (float)(hx - 12), (float)(hy - 12), 24, 24);
             g.DrawString(hour + "", hourFont, textColorB, (float)(hx - dx), (float)(hy - 6.6666f));
@@ -251,7 +252,8 @@ namespace Clock2
             // 绘制黑色表盘
             int centerX = 94, centerY = 81, radius = 68;
             g.FillEllipse(new SolidBrush(clockColor), centerX - radius, centerY - radius, radius * 2, radius * 2);
-
+            Pen pen1 = new Pen(textColor, 2);
+            Pen pen2 = new Pen(textColor, (float)1.5);
             // 绘制刻度（60 个短刻度）
             for (int i = 0; i < 60; i++)
             {
@@ -263,50 +265,10 @@ namespace Clock2
                 int x2 = centerX + (int)(radius * length2 * Math.Cos(angle));
                 int y2 = centerY + (int)(radius * length2 * Math.Sin(angle));
 
-                Pen tickPen = i % 5 == 0 ? new Pen(textColor, 2) : new Pen(textColor, 1);
+                Pen tickPen = i % 5 == 0 ? pen1 : pen2;
                 g.DrawLine(tickPen, x1, y1, x2, y2);
             }
 
-        }
-
-        public void SetBits(Bitmap bitmap)
-        {
-            IntPtr oldBits = IntPtr.Zero;
-            IntPtr screenDC = Win32Api.GetDC(IntPtr.Zero);
-            IntPtr hBitmap = IntPtr.Zero;
-            IntPtr memDc = Win32Api.CreateCompatibleDC(screenDC);
-
-            try
-            {
-                Win32Api.POINT topLoc = new Win32Api.POINT(Left, Top);
-                Win32Api.Size bitMapSize = new Win32Api.Size(this.Width, this.Height);
-                Win32Api.BLENDFUNCTION blendFunc = new Win32Api.BLENDFUNCTION();
-                Win32Api.POINT srcLoc = new Win32Api.POINT(0, 0);
-
-                hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
-                oldBits = Win32Api.SelectObject(memDc, hBitmap);
-
-                blendFunc.BlendOp = Win32Api.AC_SRC_OVER;
-                blendFunc.SourceConstantAlpha = 255;
-                blendFunc.AlphaFormat = Win32Api.AC_SRC_ALPHA;
-                blendFunc.BlendFlags = 0;
-                Win32Api.UpdateLayeredWindow(Handle, screenDC, ref topLoc, ref bitMapSize, memDc, ref srcLoc, 0, ref blendFunc, Win32Api.ULW_ALPHA);
-
-            }
-            catch (ObjectDisposedException ignore)
-            {
-                Console.WriteLine(ignore.ToString());
-            }
-            finally
-            {
-                if (hBitmap != IntPtr.Zero)
-                {
-                    Win32Api.SelectObject(memDc, oldBits);
-                    Win32Api.DeleteObject(hBitmap);
-                }
-                Win32Api.ReleaseDC(IntPtr.Zero, screenDC);
-                Win32Api.DeleteDC(memDc);
-            }
         }
 
         //public void MouseThrough()
