@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using Iplugin;
 
-namespace DesktopCalendar
+namespace Calendar1
 {
-    public class DesktopCalendarStart : PetPlug
+    public class Calendar1Start : PetPlug
     {
-        private DesktopCalendar mp = null;
+        private Calendar1 mp = null;
         private Menu[] menus = { };
         /// <summary>
         /// 初始化
         /// </summary>
         public override void Initialization() {
-            menus = new Menu[]{ new Menu("日历", 10), new Menu("桌面日历", 0) };
+            menus = new Menu[]{ new Menu("日历", 10), new Menu("桌面日历1", 1) };
         }
         /// <summary>
         /// 打开插件
@@ -22,7 +22,7 @@ namespace DesktopCalendar
         {
             if (mp == null || mp.IsDisposed)
             {
-                mp = new DesktopCalendar();
+                mp = new Calendar1();
             }
             //mp.Show();
         }

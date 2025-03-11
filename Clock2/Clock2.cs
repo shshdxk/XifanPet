@@ -168,7 +168,7 @@ namespace Clock2
             try
             {
                 DateTime now = DateTime.Now;
-                String nowStr = now.ToString("HH:mm:ss");
+                string nowStr = now.ToString("HH:mm:ss");
                 if (time == nowStr)
                 {
                     return;
