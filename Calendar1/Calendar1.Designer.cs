@@ -43,7 +43,7 @@
             this.Name = "Calendar1";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "DesktopCalender";
+            this.Text = "Calender1";
             this.Load += new System.EventHandler(this.DesktopCalendar_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Calendar1_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Calendar1_MouseMove);

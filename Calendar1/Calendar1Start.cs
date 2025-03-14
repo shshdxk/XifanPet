@@ -13,7 +13,7 @@ namespace Calendar1
         /// 初始化
         /// </summary>
         public override void Initialization() {
-            menus = new Menu[]{ new Menu("日历", 10), new Menu("桌面日历1", 1) };
+            menus = new Menu[]{ new Menu("日历", 10), new Menu("桌面日历1", 2) };
         }
         /// <summary>
         /// 打开插件

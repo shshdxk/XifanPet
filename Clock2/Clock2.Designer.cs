@@ -42,7 +42,7 @@
             this.Name = "Clock2";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Clock1";
+            this.Text = "Clock2";
             this.Load += new System.EventHandler(this.Clock2_Load);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Clock2_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Clock2_MouseMove);

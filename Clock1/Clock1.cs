@@ -112,11 +112,11 @@ namespace Clock1
                 CreateParams cParms = base.CreateParams;
                 if (through)
                 {
-                    cParms.ExStyle |= 0x00080000; // WS_EX_LAYERED
+                    cParms.ExStyle |= 0x00080080; // WS_EX_LAYERED
                 } 
                 else
                 {
-                    cParms.ExStyle &= 0x00080000; // WS_EX_LAYERED
+                    cParms.ExStyle &= 0x00080080; // WS_EX_LAYERED
                 }
                 return cParms;
             }

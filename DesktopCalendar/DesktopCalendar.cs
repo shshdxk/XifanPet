@@ -94,7 +94,7 @@ namespace DesktopCalendar
             get
             {
                 CreateParams cParms = base.CreateParams;
-                cParms.ExStyle |= 0x00080000; // WS_EX_LAYERED
+                cParms.ExStyle |= 0x00080080; // WS_EX_LAYERED
                 return cParms;
             }
         }

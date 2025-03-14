@@ -13,7 +13,7 @@ namespace DesktopCalendar
         /// 初始化
         /// </summary>
         public override void Initialization() {
-            menus = new Menu[]{ new Menu("日历", 10), new Menu("桌面日历", 0) };
+            menus = new Menu[]{ new Menu("日历", 10), new Menu("桌面日历", 1) };
         }
         /// <summary>
         /// 打开插件
