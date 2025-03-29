@@ -25,35 +25,18 @@ namespace Clock3
         string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         private Font font = null;
         private string time = null;
-        private SolidBrush textSB = new SolidBrush(Color.White);
-        private string[] weeks = new string[] { "日", "一", "二", "三", "四", "五", "六" };
         private Bitmap backend = null;
 
         private Timer timer = new Timer();
         private Bitmap bitmapTime = null;
         private Graphics g;
         private Setting setting = new Setting();
-        private Boolean initing = true;
-        private Boolean isMove = false;
+        private bool initing = true;
+        private bool isMove = false;
         // 鼠标1x坐标
         private int p1x = 0;
         // 鼠标1y坐标
         private int p1y = 0;
-        // 颜色定义
-        Color bgColor = Color.FromArgb(88, 101, 242);  // 紫色背景
-        Color clockColor = Color.Black;  // 黑色表盘
-        Color textColor = Color.White;  // 白色文本
-        private SolidBrush highlightColor = new SolidBrush(Color.DeepSkyBlue); // 蓝色刻度
-        private SolidBrush circleAccent = new SolidBrush(Color.Fuchsia); // 粉色圆形
-        // 分针
-        private Pen handPenm = new Pen(Color.White, 2);
-        // 秒针
-        private Pen handPens = new Pen(Color.White, 1.5f);
-        // 时针
-        private Font hourFont = new Font("Arial", 10, FontStyle.Bold);
-        private SolidBrush textColorB = new SolidBrush(Color.White); // 蓝色刻度
-        // 日期
-        private Font dayFont = new Font("Arial", 12);
 
         // 加载资源图片
         private Bitmap watchDial = null;
@@ -68,7 +51,7 @@ namespace Clock3
         private void Init()
         {
 
-            //Common.ImplantDesktop(this.Handle);
+            Common.ImplantDesktop(this.Handle);
 
             watchDial = new Bitmap(path + @"\Resource\watchDial.png");
             hourHand = new Bitmap(path + @"\Resource\hourHand.png");
@@ -99,22 +82,6 @@ namespace Clock3
         }
 
         #region 重载
-
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = true;
-            base.OnClosing(e);
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-
-            InitializeStylesThrough();
-            this.FormBorderStyle = FormBorderStyle.None;
-            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            base.OnHandleCreated(e);
-        }
 
         protected override CreateParams CreateParams
         {

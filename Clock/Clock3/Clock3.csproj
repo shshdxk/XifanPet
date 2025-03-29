@@ -57,11 +57,9 @@
   <ItemGroup>
     <Compile Include="Clock3.cs">
       <SubType>Form</SubType>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Clock3.Designer.cs">
       <DependentUpon>Clock3.cs</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="Clock3Start.cs" />
     <Compile Include="Program.cs" />
@@ -69,7 +67,6 @@
     <Compile Include="Setting.cs" />
     <EmbeddedResource Include="Clock3.resx">
       <DependentUpon>Clock3.cs</DependentUpon>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

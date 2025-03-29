@@ -93,18 +93,6 @@ namespace Clock1
 
         #region 重载
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = true;
-            base.OnClosing(e);
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            //InitializeStylesThrough();
-            base.OnHandleCreated(e);
-        }
-
         protected override CreateParams CreateParams
         {
             get

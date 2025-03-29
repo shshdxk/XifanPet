@@ -34,8 +34,8 @@ namespace Clock2
         private Bitmap bitmapTime = null;
         private Graphics g;
         private Setting setting = new Setting();
-        private Boolean initing = true;
-        private Boolean isMove = false;
+        private bool initing = true;
+        private bool isMove = false;
         // 鼠标1x坐标
         private int p1x = 0;
         // 鼠标1y坐标
@@ -106,22 +106,6 @@ namespace Clock2
 
         #region 重载
 
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = true;
-            base.OnClosing(e);
-        }
-
-        protected override void OnHandleCreated(EventArgs e)
-        {
-
-            InitializeStylesThrough();
-            this.FormBorderStyle = FormBorderStyle.None;
-            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            base.OnHandleCreated(e);
-        }
-
         protected override CreateParams CreateParams
         {
             get
@@ -133,12 +117,6 @@ namespace Clock2
         }
 
         #endregion
-        private void InitializeStylesThrough()
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            SetStyle(ControlStyles.UserPaint, true);
-            UpdateStyles();
-        }
 
         //        private void InitializeStylesRecover()
         //        {
