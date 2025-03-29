@@ -59,19 +59,19 @@ namespace XifanPet
 
         #region 重载
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            e.Cancel = true;
-            base.OnClosing(e);
-            haveHandle = false;
-        }
+        //protected override void OnClosing(CancelEventArgs e)
+        //{
+        //    e.Cancel = true;
+        //    base.OnClosing(e);
+        //    haveHandle = false;
+        //}
 
-        protected override void OnHandleCreated(EventArgs e)
-        {
-            InitializeStyles();
-            base.OnHandleCreated(e);
-            haveHandle = true;
-        }
+        //protected override void OnHandleCreated(EventArgs e)
+        //{
+        //    InitializeStyles();
+        //    base.OnHandleCreated(e);
+        //    haveHandle = true;
+        //}
 
         protected override CreateParams CreateParams
         {
@@ -191,6 +191,7 @@ namespace XifanPet
 
         private void FishForm_Load(object sender, EventArgs e)
         {
+            InitializeStyles();
             //Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE);
             //Console.WriteLine(Win32Api.GetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE));
             Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
@@ -200,6 +201,7 @@ namespace XifanPet
             DynamicPet.LoadAllPets();
             InitPet();
             InitSetting();
+            haveHandle = true;
         }
 
         private void InitPet()
@@ -322,6 +324,7 @@ namespace XifanPet
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
+            haveHandle = false;
             SettingManager.SaveSetting(null);
         }
 
