@@ -17,7 +17,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WinSystem;
 
 namespace DesktopCalendar
 {
@@ -64,9 +63,13 @@ namespace DesktopCalendar
             // 将本窗体嵌入这个窗口
             // https://www.freesion.com/article/2801344904/
             InitializeStylesThrough();
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            Win32Api.RECT rect = Common.ImplantDesktop(this.Handle);
-            this.Left = rect.right - rect.left - 800;
+            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            //Win32Api.RECT rect = Common.ImplantDesktop(this.Handle);
+            //this.Left = rect.right - rect.left - 800;
+            //this.Top = 30;
+            int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+            int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+            this.Left = screenWidth - 800;
             this.Top = 30;
         }
 
@@ -85,7 +88,7 @@ namespace DesktopCalendar
 
             InitializeStylesThrough();
             this.FormBorderStyle = FormBorderStyle.None;
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             base.OnHandleCreated(e);
         }
 

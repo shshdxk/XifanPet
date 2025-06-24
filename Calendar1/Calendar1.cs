@@ -17,7 +17,6 @@ using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WinSystem;
 
 namespace Calendar1
 {
@@ -66,7 +65,7 @@ namespace Calendar1
             // https://www.freesion.com/article/2801344904/
             //InitializeStylesThrough();
             //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
-            Win32Api.RECT rect = Common.ImplantDesktop(this.Handle);
+            //Win32Api.RECT rect = Common.ImplantDesktop(this.Handle);
             string settingPath = path + @"\setting.json";
             if (File.Exists(settingPath))
             {
@@ -85,7 +84,9 @@ namespace Calendar1
             }
             else
             {
-                this.Left = rect.right - rect.left - 800;
+                int screenWidth = Screen.PrimaryScreen.Bounds.Width;
+                int screenHeight = Screen.PrimaryScreen.Bounds.Height;
+                this.Left = screenWidth - 800;
                 this.Top = 30;
             }
             initing = false;

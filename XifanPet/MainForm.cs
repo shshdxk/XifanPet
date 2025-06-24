@@ -16,6 +16,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PetCommon;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace XifanPet
 {
@@ -24,7 +26,7 @@ namespace XifanPet
         private string path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         IPet pet = null;
         ActionResource actionResource = null;
-        Point oldPoint = new Point(0, 0);
+        System.Drawing.Point oldPoint = new System.Drawing.Point(0, 0);
         bool mouseDown = false;
         bool haveHandle = false;
         Timer timerSpeed = new Timer();
@@ -135,7 +137,7 @@ namespace XifanPet
                 this.Top = (int)top;
             }
             actionResource.GetFrame(toRight);
-            SetBits(actionResource.GetPic(toRight));
+            SetBits((object)actionResource.GetPic(toRight));
         }
 
         private void FixLeftTop()
@@ -183,10 +185,17 @@ namespace XifanPet
             }
         }
 
-        public void SetBits(Bitmap bitmap)
+        public void SetBits(object pic)
         {
             if (!haveHandle) return;
-            Common.SetBits(Handle, bitmap, Left, Top);
+            if (pic is Bitmap bitmap)
+            {
+                Common.SetBits(Handle, bitmap, Left, Top);
+            }
+            else if (pic is Image<Rgba32> img)
+            {
+                Common.SetBits(Handle, img, Left, Top);
+            }
         }
 
         private void FishForm_Load(object sender, EventArgs e)

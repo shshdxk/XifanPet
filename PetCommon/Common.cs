@@ -6,32 +6,14 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using WinSystem;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using System.Drawing.Imaging;
 
 namespace PetCommon
 {
     public class Common
     {
-        /// <summary>
-        /// 将窗口嵌入桌面
-        /// </summary>
-        /// <param name="intPtr">需要嵌入的窗口</param>
-        /// <returns>桌面大小位置</returns>
-        public static Win32Api.RECT ImplantDesktop(IntPtr intPtr)
-        {
-            Win32Api.RECT rect = new Win32Api.RECT();
-            IntPtr dWnd = Win32Api.FindWindow("Progman", null);
-            if (dWnd != IntPtr.Zero)
-            {
-                IntPtr pWnd = Win32Api.FindWindowEx(dWnd, 0, "SHELLDLL_DefView", null);
-                if (pWnd != IntPtr.Zero)
-                {
-                    Win32Api.SendMessage(dWnd, 0x052c, 0, 0);
-                    Win32Api.SetParent(intPtr, pWnd);
-                    Win32Api.GetWindowRect(pWnd, out rect);
-                }
-            }
-            return rect;
-        }
 
         /// <summary>
         /// 将bitmap设置到窗口上
@@ -54,7 +36,7 @@ namespace PetCommon
                 Win32Api.BLENDFUNCTION blendFunc = new Win32Api.BLENDFUNCTION();
                 Win32Api.POINT srcLoc = new Win32Api.POINT(0, 0);
 
-                hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
+                hBitmap = bitmap.GetHbitmap(System.Drawing.Color.FromArgb(0));
                 oldBits = Win32Api.SelectObject(memDc, hBitmap);
 
                 blendFunc.BlendOp = Win32Api.AC_SRC_OVER;
@@ -79,5 +61,38 @@ namespace PetCommon
             }
         }
 
+        /// <summary>
+        /// 支持 ImageSharp Image<Rgba32> 的 SetBits 重载
+        /// </summary>
+        public static void SetBits(IntPtr handle, Image<Rgba32> image, int left, int top)
+        {
+            using (var bitmap = ImageSharpToBitmap(image))
+            {
+                SetBits(handle, bitmap, left, top);
+            }
+        }
+
+        /// <summary>
+        /// ImageSharp Image<Rgba32> 转 Bitmap
+        /// </summary>
+        public static Bitmap ImageSharpToBitmap(Image<Rgba32> image)
+        {
+            var bmp = new Bitmap(image.Width, image.Height, PixelFormat.Format32bppArgb);
+            var rect = new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height);
+            var data = bmp.LockBits(rect, ImageLockMode.WriteOnly, bmp.PixelFormat);
+            try
+            {
+                // 不使用 unsafe，直接用 ImageSharp 的 CopyPixelDataTo(byte[])
+                int bytes = Math.Abs(data.Stride) * data.Height;
+                byte[] pixelBytes = new byte[bytes];
+                image.CopyPixelDataTo(pixelBytes);
+                System.Runtime.InteropServices.Marshal.Copy(pixelBytes, 0, data.Scan0, bytes);
+            }
+            finally
+            {
+                bmp.UnlockBits(data);
+            }
+            return bmp;
+        }
     }
 }

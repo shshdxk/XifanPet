@@ -16,7 +16,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WinSystem;
 
 namespace Clock2
 {
@@ -70,7 +69,7 @@ namespace Clock2
             //this.Left = rect.right - rect.left - 800;
             //this.Top = 30;
 
-            Common.ImplantDesktop(this.Handle);
+            //Common.ImplantDesktop(this.Handle);
 
             //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             pfc = new PrivateFontCollection();

@@ -17,7 +17,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WinSystem;
 
 namespace Clock1
 {
@@ -46,8 +45,8 @@ namespace Clock1
 
         public Clock1()
         {
-            InitializeComponent();
             Init();
+            InitializeComponent();
         }
 
         private void Init()
@@ -179,7 +178,7 @@ namespace Clock1
         {
             InitializeStylesThrough();
             this.FormBorderStyle = FormBorderStyle.None;
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
+            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, Win32Api.WS_EX_TRANSPARENT | Win32Api.WS_EX_LAYERED);
             through = true;
             this.Show();
         }
@@ -187,7 +186,7 @@ namespace Clock1
         public void MouseRecover()
         {
             InitializeStylesRecover();
-            Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
+            //Win32Api.SetWindowLong(this.Handle, Win32Api.GWL_EXSTYLE, 0x90000);
             through = false;
             this.FormBorderStyle = FormBorderStyle.None;
             this.Show();
@@ -206,6 +205,10 @@ namespace Clock1
                 font = null;
             }
             font = ReadFont((float)size);
+            if (font == null)
+            {
+                return;
+            }
             if (bitmapTime != null)
             {
                 bitmapTime.Dispose();
@@ -225,7 +228,7 @@ namespace Clock1
         }
         private Font ReadFont(float size)
         {
-            return new Font(pfc.Families[0], (float)size);
+            return pfc == null ? null : new Font(pfc.Families[0], (float)size);
         }
 
         #region panel1移动事件

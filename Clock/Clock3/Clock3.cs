@@ -16,7 +16,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WinSystem;
 
 namespace Clock3
 {
@@ -51,7 +50,7 @@ namespace Clock3
         private void Init()
         {
 
-            Common.ImplantDesktop(this.Handle);
+            //Common.ImplantDesktop(this.Handle);
 
             watchDial = new Bitmap(path + @"\Resource\watchDial.png");
             hourHand = new Bitmap(path + @"\Resource\hourHand.png");

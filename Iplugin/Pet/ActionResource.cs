@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Iplugin.Pet
 {
@@ -15,11 +16,11 @@ namespace Iplugin.Pet
         /// <summary>
         /// 全部帧的图片(向左)
         /// </summary>
-        private List<Bitmap> leftPics = new List<Bitmap>();
+        private List<Image<Rgba32>> leftPics = new List<Image<Rgba32>>();
         /// <summary>
         /// 全部帧的图片(向右)
         /// </summary>
-        private List<Bitmap> rightPics = new List<Bitmap>();
+        private List<Image<Rgba32>> rightPics = new List<Image<Rgba32>>();
 
         public string Name { get; }
 
@@ -28,7 +29,7 @@ namespace Iplugin.Pet
         /// </summary>
         /// <param name="right"></param>
         /// <returns></returns>
-        public Bitmap GetPic(Boolean right)
+        public Image<Rgba32> GetPic(Boolean right)
         {
             if (right)
             {
@@ -74,7 +75,7 @@ namespace Iplugin.Pet
             return f;
         }
 
-        public ActionResource(string name, List<Bitmap> leftPics, List<Bitmap> rightPics, int width, int height, bool right)
+        public ActionResource(string name, List<Image<Rgba32>> leftPics, List<Image<Rgba32>> rightPics, int width, int height, bool right)
         {
             this.Name = name;
             this.leftPics = leftPics;
