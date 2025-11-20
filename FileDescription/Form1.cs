@@ -27,6 +27,26 @@ namespace FileDescription
         }
         private void button1_Click(object sender, EventArgs e)
         {
+            int width = 128;
+            int height = 64;
+            Bitmap bmp = new Bitmap(width, height);
+            Random rand = new Random();
+            for (int y = 0; y < height; y++)
+            {
+                for (int x = 0; x < width; x++)
+                {
+                    double value = rand.NextDouble();
+                    Color color = value > 0.5 ? Color.White : Color.Black;
+                    bmp.SetPixel(x, y, color);
+                }
+            }
+            string dir = @"D:\Download\pic";
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            string fileName = $"{DateTime.Now:yyyyMMddHHmmssfff}.png";
+            string filePath = Path.Combine(dir, fileName);
+            bmp.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+            MessageBox.Show($"图片已保存到: {filePath}");
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -40,6 +60,11 @@ namespace FileDescription
                 plug = null;
                 callbackTmp(plugTmp);
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

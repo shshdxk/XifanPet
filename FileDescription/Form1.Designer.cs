@@ -28,63 +28,80 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            button1 = new System.Windows.Forms.Button();
+            textBox1 = new System.Windows.Forms.TextBox();
+            textBox2 = new System.Windows.Forms.TextBox();
+            label1 = new System.Windows.Forms.Label();
+            button2 = new System.Windows.Forms.Button();
+            SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(12, 44);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.Location = new System.Drawing.Point(14, 62);
+            button1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(88, 33);
+            button1.TabIndex = 0;
+            button1.Text = "生成杂点图";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(12, 73);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox1.Size = new System.Drawing.Size(686, 418);
-            this.textBox1.TabIndex = 1;
+            textBox1.Location = new System.Drawing.Point(14, 103);
+            textBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            textBox1.Size = new System.Drawing.Size(800, 590);
+            textBox1.TabIndex = 1;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(705, 73);
-            this.textBox2.Multiline = true;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBox2.Size = new System.Drawing.Size(584, 418);
-            this.textBox2.TabIndex = 2;
+            textBox2.Location = new System.Drawing.Point(822, 103);
+            textBox2.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            textBox2.Multiline = true;
+            textBox2.Name = "textBox2";
+            textBox2.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            textBox2.Size = new System.Drawing.Size(681, 590);
+            textBox2.TabIndex = 2;
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(157, 44);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 12);
-            this.label1.TabIndex = 3;
-            this.label1.Text = "label1";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(189, 18);
+            label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(43, 17);
+            label1.TabIndex = 3;
+            label1.Text = "label1";
+            // 
+            // button2
+            // 
+            button2.Location = new System.Drawing.Point(131, 62);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(91, 33);
+            button2.TabIndex = 4;
+            button2.Text = "生成杂点图2";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1301, 503);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textBox2);
-            this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.button1);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1518, 713);
+            Controls.Add(button2);
+            Controls.Add(label1);
+            Controls.Add(textBox2);
+            Controls.Add(textBox1);
+            Controls.Add(button1);
+            Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            Name = "Form1";
+            Text = "Form1";
+            FormClosing += Form1_FormClosing;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -94,6 +111,7 @@
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button button2;
     }
 }
 
